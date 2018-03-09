@@ -173,6 +173,9 @@ bindkey "^[OF" end-of-line
 bindkey "^[[3~" delete-char
 bindkey '^W' my-backward-delete-word
 bindkey '^H' my-backward-delete-word
+bindkey -s '^[[1;3D' '^Ucd ..^M'
+bindkey -s '^[[1;3A' '^Ucd^M'
+bindkey -s '^[[1;3B' '^Ucd -^M'
 
 ################################################################################################
 # MAN IN COLOR

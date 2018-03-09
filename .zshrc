@@ -6,7 +6,7 @@ zstyle ':completion:*' users-hosts
 
 # MUST BE AT THE END OF THIS FILE
 . ${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 ZSH_HIGHLIGHT_STYLES[builtin]='fg=226'
-ZSH_HIGHLIGHT_STYLES[alias]=$ZSH_HIGHLIGHT_STYLES[builtin]
+ZSH_HIGHLIGHT_STYLES[alias]='fg=117'
 ZSH_HIGHLIGHT_STYLES[command]='fg=46'
