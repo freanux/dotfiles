@@ -1,5 +1,5 @@
 #USE_PROMPT_SUFFIX=1
-. ${HOME}./.zsh/base.zshrc
+. ${HOME}/.zsh/base.zshrc
 zstyle ':completion:*' users-hosts 
 
 . ${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
