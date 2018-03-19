@@ -91,7 +91,7 @@ zstyle ':completion:*' single-ignored show
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
-setopt appendhistory autocd extendedglob notify
+setopt appendhistory autocd extendedglob notify histignoredups
 
 ################################################################################################
 # PROMPT
