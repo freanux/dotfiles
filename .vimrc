@@ -48,10 +48,9 @@ fu! Options()
 	"let opt=opt."\[".&lines.",".&columns."\]"
 	return opt
 endf
-"set nowrap
+set nowrap
 "set joinspaces
 set background=dark
-set number
 set tabstop=4
 set shiftwidth=4
 "set textwidth=80 " Gilt nicht bei eMail und News, siehe unten
@@ -134,10 +133,11 @@ set notimeout
 set smartindent
 set smarttab
 set autoindent
+
+" Relative or absolute number lines
 map <C-Esc> :set nosmartindent<CR>:set noautoindent<CR>
-map <F3> :Tlist<CR>
-map <F4> :set invnumber<CR>
-map <F5> :1,$s/\t/    /g<CR>
+map <F3> :set relativenumber!<CR>
+"map <F5> :1,$s/\t/    /g<CR>
 set completeopt=menu,menuone
 set dir=~/.vim/tmp
 command C let @/=""
@@ -153,7 +153,6 @@ inoremap <c-o>	<Esc>:tabprevious<CR>i
 inoremap <C-p>	<Esc>:tabnext<CR>i
 inoremap <C-t>	<Esc>:tabnew<CR>
 
-"colorscheme wombat256mod
 colorscheme sorcerer
 "***** tmux settings *****"
 if &term =~ '^screen'
@@ -173,3 +172,10 @@ set foldmethod=syntax
 set foldlevel=99
 map <F2> za
 map <F8> :call g:ClangUpdateQuickFix()<CR>
+hi CursorLineNr guifg=#f5d442
+set cursorline
+set cursorlineopt=number
+hi CursorLineNR cterm=bold
+set number
+set relativenumber
+set nomodeline

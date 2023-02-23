@@ -144,7 +144,7 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias s='ssh -p10922 flynn@magellan.earthwave.ch'
+alias s='ssh -p99999 user@host'
 alias jc="journalctl"
 alias sc="systemctl"
 
