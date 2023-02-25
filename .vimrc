@@ -137,7 +137,19 @@ set autoindent
 " Relative or absolute number lines
 map <C-Esc> :set nosmartindent<CR>:set noautoindent<CR>
 map <F3> :set relativenumber!<CR>
-"map <F5> :1,$s/\t/    /g<CR>
+map <F4> :Ex<CR><C-w>o
+map <F5> :vert sba<CR>
+map <F6> :hori sba<CR>
+map <F8> <C-w>o
+
+map <F9> :bd<CR>
+map <F12> :%bd<CR>
+
+map <A-Left> <C-w>h
+map <A-Right> <C-w>l
+map <A-Down> <C-w>j
+map <A-Up> <C-w>k
+
 set completeopt=menu,menuone
 set dir=~/.vim/tmp
 command C let @/=""
@@ -154,6 +166,7 @@ inoremap <C-p>	<Esc>:tabnext<CR>i
 inoremap <C-t>	<Esc>:tabnew<CR>
 
 colorscheme sorcerer
+
 "***** tmux settings *****"
 if &term =~ '^screen'
     " tmux will send xterm-style keys when its xterm-keys option is on
@@ -171,7 +184,7 @@ filetype plugin indent on
 set foldmethod=syntax
 set foldlevel=99
 map <F2> za
-map <F8> :call g:ClangUpdateQuickFix()<CR>
+"map <F8> :call g:ClangUpdateQuickFix()<CR>
 hi CursorLineNr guifg=#f5d442
 set cursorline
 set cursorlineopt=number
@@ -179,3 +192,4 @@ hi CursorLineNR cterm=bold
 set number
 set relativenumber
 set nomodeline
+let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro'
