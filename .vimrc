@@ -136,19 +136,57 @@ set autoindent
 
 " Relative or absolute number lines
 map <C-Esc> :set nosmartindent<CR>:set noautoindent<CR>
+
+" ***********************************************
+" **** file explorer and window key mappings ****
+" ***********************************************
+
+" toggle fixed and relative line number 
 map <F3> :set relativenumber!<CR>
+imap <F3> <ESC>:set relativenumber!<CR>a
+
+" show file explorer
 map <F4> :Ex<CR><C-w>o
+map <F4> <ESC>:Ex<CR><C-w>o
+
+" show all buffers side by side
 map <F5> :vert sba<CR>
+imap <F5> <ESC>:vert sba<CR>
+
+" show all buffers one below the other
 map <F6> :hori sba<CR>
+imap <F6> <ESC>:hori sba<CR>
+
+" create new buffer
+map <F7> :enew<CR>
+imap <F7> <ESC>:enew<CR>
+
+" zoom selected buffer
 map <F8> <C-w>o
+imap <F8> <ESC><C-w>o
 
+" close selected buffer
 map <F9> :bd<CR>
-map <F12> :%bd<CR>
+imap <F9> <ESC>:bd<CR>
 
+" close all open buffers
+map <F12> :%bd<CR>
+imap <F12> <ESC>:%bd<CR>
+
+" switch between buffers
 map <A-Left> <C-w>h
+imap <A-Left> <ESC><C-w>ha
+
 map <A-Right> <C-w>l
+imap <A-Right> <ESC><C-w>la
+
 map <A-Down> <C-w>j
+imap <A-Down> <ESC><C-w>ja
+
 map <A-Up> <C-w>k
+imap <A-Up> <ESC><C-w>ka
+
+" ***********************************************
 
 set completeopt=menu,menuone
 set dir=~/.vim/tmp
