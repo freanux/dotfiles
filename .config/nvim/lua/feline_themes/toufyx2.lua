@@ -133,15 +133,16 @@ end
 --- provide the line's information (curosor position and file's total lines)
 function provide_linenumber(component, opts)
   local line_count = vim.api.nvim_buf_line_count(0)
-  local current_line = vim.api.nvim_win_get_cursor(0)[1]
-  local percent = 100 * current_line / line_count
+  local cur_y = vim.api.nvim_win_get_cursor(0)[1]
+  local cur_x = vim.api.nvim_win_get_cursor(0)[2] + 1
+  local percent = 100 * cur_y / line_count
   local perc_pos = string.format("%3i", percent) .. '%%'
-  if current_line == 1 then
-    perc_pos = "Top"
-  elseif current_line == line_count then
-    perc_pos = "Bot"
+  if cur_y == 1 then
+    perc_pos = " Top"
+  elseif cur_y == line_count then
+    perc_pos = " Bot"
   end
-  return get_line_cursor() .. '/' .. get_line_total() .. '  ' .. perc_pos
+  return cur_y .. '/' .. line_count .. ':' .. string.format('%3i', cur_x) .. '  ' .. perc_pos; 
 end
 
 -- provide the buffer's file type
