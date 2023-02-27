@@ -66,6 +66,14 @@ function is_buffer_modified()
   return vim.bo[vim.api.nvim_win_get_buf(0)].modified
 end
 
+function is_buffer_readonly()
+    return vim.bo[vim.api.nvim_win_get_buf(0)].readonly
+end
+
+function is_in_paste_mode()
+    return vim.fn['IsInPasteMode']() == 1 
+end
+
 function get_filename_bg()
   return (is_buffer_modified() and 'magenta' or 'white')
 end
@@ -120,14 +128,21 @@ end
 -- 3. setup custom providers
 --
 
---- provide the vim mode (NOMRAL, INSERT, etc.)
+--- provide the vim mode (NORMAL, INSERT, etc.)
 function provide_mode(component, opts)
-  return vi_mode.get_vim_mode()
+  local cur_mode = vi_mode.get_vim_mode()
+  if is_in_paste_mode() then 
+      if cur_mode == 'INSERT' or cur_mode == 'REPLACE' then
+          cur_mode = cur_mode .. '  ' .. 'PASTE'
+      end
+  end
+
+  return cur_mode
 end
 
 --- provide the buffer's file name
 function provide_filename(component, opts)
-  return get_filename() .. (is_buffer_modified() and "[+]" or "")
+  return get_filename() .. (is_buffer_modified() and '[+]' or '') .. (is_buffer_readonly() and ' ' or '')
 end
 
 --- provide the line's information (curosor position and file's total lines)
@@ -136,11 +151,11 @@ function provide_linenumber(component, opts)
   local cur_y = vim.api.nvim_win_get_cursor(0)[1]
   local cur_x = vim.api.nvim_win_get_cursor(0)[2] + 1
   local percent = 100 * cur_y / line_count
-  local perc_pos = string.format("%3i", percent) .. '%%'
+  local perc_pos = string.format('%3i', percent) .. '%%'
   if cur_y == 1 then
-    perc_pos = " Top"
+    perc_pos = ' Top'
   elseif cur_y == line_count then
-    perc_pos = " Bot"
+    perc_pos = ' Bot'
   end
   return cur_y .. '/' .. line_count .. ':' .. string.format('%3i', cur_x) .. '  ' .. perc_pos; 
 end

@@ -1,4 +1,4 @@
-highlight LineNr term=bold cterm=NONE ctermfg=Grey ctermbg=NONE
+"  highlight LineNr term=bold cterm=NONE ctermfg=Grey ctermbg=NONE
 
 set nocompatible            " disable compatibility to old-time vi
 set showmatch               " show matching 
@@ -29,7 +29,7 @@ set number
 set relativenumber
 set nomodeline
 set shortmess=aI
-set pastetoggle=<f10>
+set pastetoggle=<F10>
 set noshowmode
 set nowrap
 set mouse=                  " turn off mouse
@@ -94,8 +94,8 @@ endif
 
 " ***********************************************
 colorscheme sorcerer 
-hi CursorLineNr guifg=#f5d442
-hi CursorLineNR cterm=bold
+" hi CursorLineNr guifg=#f5d442
+" hi CursorLineNR cterm=bold
 set termguicolors
 
 " ***********************************************
@@ -110,6 +110,11 @@ call plug#begin()
     Plug 'feline-nvim/feline.nvim', { 'branch': '0.5-compat' }
     Plug 'neovim/nvim-lspconfig'
 call plug#end()
+
+" ***********************************************
+function IsInPasteMode()
+    return &paste
+endfunction
 
 " ***********************************************
 lua << EOF
