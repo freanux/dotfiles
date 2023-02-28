@@ -26,6 +26,7 @@ vim.opt.wrap = false
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 4
 vim.opt.updatetime = 50
+vim.opt.signcolumn = "yes"
 
 vim.g.mapleader = " "
 
@@ -34,8 +35,10 @@ vim.g.netrw_preview = true
 
 vim.cmd.filetype("plugin indent on")
 vim.cmd.syntax("on")
+
 vim.cmd.colorscheme("sorcerer")
 vim.cmd.hi("CursorLineNr guifg=#f5d442 cterm=bold")
+vim.cmd.hi("SignColumn guibg=NONE")
 
 vim.opt.swapfile = false
 vim.opt.backup = false
