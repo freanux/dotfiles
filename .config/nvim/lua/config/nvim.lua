@@ -26,7 +26,7 @@ vim.opt.wrap = false
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 4
 vim.opt.updatetime = 50
-vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = "number"   -- "auto", "yes", "no", "number"
 
 vim.g.mapleader = " "
 
