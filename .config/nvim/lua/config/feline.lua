@@ -1,3 +1,5 @@
+require('feline').setup()
+
 local feline = require('feline')
 local vi_mode = require('feline.providers.vi_mode')
 
@@ -51,7 +53,7 @@ local GRUVBOX = {
 --
 
 --- get the current buffer's file name, defaults to '[no name]'
-function get_filename()
+local function get_filename()
   local filename = vim.api.nvim_buf_get_name(0)
   if filename == '' then
     filename = '[no name]'
@@ -62,24 +64,24 @@ function get_filename()
   return vim.fn.fnamemodify(filename, ':~:.')
 end
 
-function is_buffer_modified()
+local function is_buffer_modified()
   return vim.bo[vim.api.nvim_win_get_buf(0)].modified
 end
 
-function is_buffer_readonly()
+local function is_buffer_readonly()
     return vim.bo[vim.api.nvim_win_get_buf(0)].readonly
 end
 
-function is_in_paste_mode()
-    return vim.fn['IsInPasteMode']() == 1 
+local function is_in_paste_mode()
+    return vim.fn['IsInPasteMode']() == 1
 end
 
-function get_filename_bg()
+local function get_filename_bg()
   return (is_buffer_modified() and 'magenta' or 'white')
 end
 
 --- get the current buffer's file type, defaults to '[not type]'
-function get_filetype()
+local function get_filetype()
   local filetype = vim.bo.filetype
   if filetype == '' then
     filetype = '[no type]'
@@ -87,38 +89,27 @@ function get_filetype()
   return filetype:lower()
 end
 
---- get the cursor's line
-function get_line_cursor()
-  local cursor_line, _ = unpack(vim.api.nvim_win_get_cursor(0))
-  return cursor_line
-end
-
---- get the file's total number of lines
-function get_line_total()
-  return vim.api.nvim_buf_line_count(0)
-end
-
 --- wrap a string with whitespaces
-function wrap(string)
+local function wrap(string)
   return ' ' .. string .. ' '
 end
 
 --- wrap a string with whitespaces and add a '' on the left,
 -- use on left section components for a nice  transition
-function wrap_left(string)
+local function wrap_left(string)
   return ' ' .. string .. ' '
 end
 
 --- wrap a string with whitespaces and add a '' on the right,
 -- use on left section components for a nice  transition
-function wrap_right(string)
+local function wrap_right(string)
   return ' ' .. string .. ' '
 end
 
 --- decorate a provider with a wrapper function
 -- the provider must conform to signature: (component, opts) -> string
 -- the wrapper must conform to the signature: (string) -> string
-function wrapped_provider(provider, wrapper)
+local function wrapped_provider(provider, wrapper)
   return function(component, opts)
     return wrapper(provider(component, opts))
   end
@@ -129,9 +120,9 @@ end
 --
 
 --- provide the vim mode (NORMAL, INSERT, etc.)
-function provide_mode(component, opts)
+local function provide_mode(_, _)
   local cur_mode = vi_mode.get_vim_mode()
-  if is_in_paste_mode() then 
+  if is_in_paste_mode() then
       if cur_mode == 'INSERT' or cur_mode == 'REPLACE' then
           cur_mode = cur_mode .. '  ' .. 'PASTE'
       end
@@ -141,12 +132,12 @@ function provide_mode(component, opts)
 end
 
 --- provide the buffer's file name
-function provide_filename(component, opts)
-  return get_filename() .. (is_buffer_modified() and '[+]' or '') .. (is_buffer_readonly() and ' ' or '')
+local function provide_filename(_, _)
+  return get_filename() .. (is_buffer_modified() and ' ●' or '') .. (is_buffer_readonly() and ' ' or '')
 end
 
 --- provide the line's information (curosor position and file's total lines)
-function provide_linenumber(component, opts)
+local function provide_linenumber(_, _)
   local line_count = vim.api.nvim_buf_line_count(0)
   local cur_y = vim.api.nvim_win_get_cursor(0)[1]
   local cur_x = vim.api.nvim_win_get_cursor(0)[2] + 1
@@ -157,11 +148,12 @@ function provide_linenumber(component, opts)
   elseif cur_y == line_count then
     perc_pos = ' Bot'
   end
-  return cur_y .. '/' .. line_count .. ':' .. string.format('%3i', cur_x) .. '  ' .. perc_pos; 
+
+  return cur_y .. '/' .. line_count .. ':' .. string.format('%3i', cur_x) .. '  ' .. perc_pos;
 end
 
 -- provide the buffer's file type
-function provide_filetype(component, opts)
+local function provide_filetype(_, _)
   return get_filetype()
 end
 
@@ -208,6 +200,25 @@ table.insert(components.active[LEFT], {
       fg = 'black',
     }
   end,
+})
+
+table.insert(components.active[LEFT], {
+  provider = 'diagnostic_errors',
+  hl = { fg = 'red' },
+})
+
+table.insert(components.active[LEFT], {
+  provider = 'diagnostic_warnings',
+  hl = { fg = 'yellow' },
+})
+
+table.insert(components.active[LEFT], {
+  provider = 'diagnostic_hints',
+  hl = { fg = 'cyan' },
+})
+table.insert(components.active[LEFT], {
+  provider = 'diagnostic_info',
+  hl = { fg = 'skyblue' },
 })
 
 -- insert the filetype component before the linenumber component

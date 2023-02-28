@@ -1,0 +1,7 @@
+require("config.nvim")
+require("config.feline")
+require("config.lsp")
+require("config.telescope")
+require("config.treesitter")
+require("config.undotree")
+require("config.harpoon")
