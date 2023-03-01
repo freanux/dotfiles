@@ -97,6 +97,16 @@ local function is_in_paste_mode()
     return vim.fn['IsInPasteMode']() == 1
 end
 
+local function show_paste()
+  if is_in_paste_mode() then
+    local cur_mode = vi_mode.get_vim_mode()
+    if cur_mode == 'INSERT' or cur_mode == 'REPLACE' then
+      return true
+    end
+  end
+  return false
+end
+
 local function get_filename_bg()
   return (is_buffer_modified() and 'magenta' or 'white')
 end
@@ -107,6 +117,10 @@ local function get_mode_fg()
       return 'white'
   end
   return 'black'
+end
+
+local function get_mode_sep()
+    return show_paste() and '' or 'right_filled'
 end
 
 --- get the current buffer's file type, defaults to '[not type]'
@@ -156,14 +170,21 @@ end
 
 --- provide the vim mode (NORMAL, INSERT, etc.)
 local function provide_mode(_, _)
-  local cur_mode = vi_mode.get_vim_mode()
-  if is_in_paste_mode() then
-      if cur_mode == 'INSERT' or cur_mode == 'REPLACE' then
-          cur_mode = cur_mode .. '  ' .. 'PASTE'
-      end
-  end
+  return vi_mode.get_vim_mode()
+end
 
-  return cur_mode
+local function provide_paste(_, _)
+  if show_paste() then
+    return ' PASTE '
+  end
+  return ''
+end
+
+local function provide_paste_opener(_, _)
+  if show_paste() then
+    return ''
+  end
+  return ''
 end
 
 --- provide the buffer's file name
@@ -214,13 +235,12 @@ local components = {
   },
 }
 
--- insert the mode component at the beginning of the left section
 table.insert(components.active[LEFT], {
   name = 'mode',
   provider = wrapped_provider(provide_mode, wrap),
-  right_sep = 'right_filled',
-  -- hl needs to be a function to avoid calling get_mode_color
-  -- before feline initiation
+  right_sep = function()
+    return get_mode_sep()
+  end,
   hl = function()
     return {
       fg = get_mode_fg(),
@@ -229,7 +249,29 @@ table.insert(components.active[LEFT], {
   end,
 })
 
--- insert the filename component after the mode component
+table.insert(components.active[LEFT], {
+  name = 'paste_opener',
+  provider = provide_paste_opener,
+  hl = function()
+    return {
+      bg = vi_mode.get_mode_color(),
+      fg = 'black',
+    }
+  end,
+})
+
+table.insert(components.active[LEFT], {
+  name = 'paste',
+  provider = provide_paste,
+  right_sep = 'right_filled',
+  hl = function()
+    return {
+      fg = get_mode_fg(),
+      bg = vi_mode.get_mode_color(),
+    }
+  end,
+})
+
 table.insert(components.active[LEFT], {
   name = 'filename',
   provider = wrapped_provider(provide_filename, wrap_left),
@@ -261,7 +303,6 @@ table.insert(components.active[LEFT], {
   hl = { fg = 'skyblue' },
 })
 
--- insert the filetype component before the linenumber component
 table.insert(components.active[RIGHT], {
   name = 'filetype',
   provider = wrapped_provider(provide_filetype, wrap),
@@ -271,7 +312,6 @@ table.insert(components.active[RIGHT], {
   },
 })
 
--- insert the file encoding component before the linenumber component
 table.insert(components.active[RIGHT], {
   name = 'file_encoding',
   provider = wrapped_provider(provide_encoding, wrap_right),
@@ -282,7 +322,6 @@ table.insert(components.active[RIGHT], {
   },
 })
 
--- insert the linenumber component at the end of the left right section
 table.insert(components.active[RIGHT], {
   name = 'linenumber',
   provider = wrapped_provider(provide_linenumber, wrap),
@@ -293,7 +332,6 @@ table.insert(components.active[RIGHT], {
   },
 })
 
--- insert the inactive filename component at the beginning of the left section
 table.insert(components.inactive[LEFT], {
   name = 'filename_inactive',
   provider = wrapped_provider(provide_filename, wrap),
