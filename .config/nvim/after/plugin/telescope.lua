@@ -15,3 +15,14 @@ vim.keymap.set('i', '<C-b>', builtin.buffers, {})
 vim.keymap.set('n', '<leader>ps', function()
     builtin.grep_string({ search = vim.fn.input("Grep > ") })
 end)
+
+local actions = require("telescope.actions")
+require("telescope").setup({
+    defaults = {
+        mappings = {
+            i = {
+                ["<esc>"] = actions.close,
+            },
+        },
+    },
+})
