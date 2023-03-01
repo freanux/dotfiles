@@ -16,7 +16,7 @@ local MODE_COLORS = {
   ['NORMAL'] = 'green',
   ['COMMAND'] = 'skyblue',
   ['INSERT'] = 'orange',
-  ['REPLACE'] = 'red',
+  ['REPLACE'] = 'fire',
   ['LINES'] = 'violet',
   ['VISUAL'] = 'violet',
   ['OP'] = 'yellow',
@@ -30,6 +30,24 @@ local MODE_COLORS = {
   ['NONE'] = 'yellow',
 }
 
+local MODE_COLOR_FG_INVERT = {
+  ['NORMAL'] = false,
+  ['COMMAND'] = false,
+  ['INSERT'] = false,
+  ['REPLACE'] = true,
+  ['LINES'] = false,
+  ['VISUAL'] = false,
+  ['OP'] = false,
+  ['BLOCK'] = false,
+  ['V-REPLACE'] = false,
+  ['ENTER'] = false,
+  ['MORE'] = false,
+  ['SELECT'] = false,
+  ['SHELL'] = false,
+  ['TERM'] = false,
+  ['NONE'] = false,
+}
+
 -- gruvbox theme
 local GRUVBOX = {
   fg = '#ebdbb2',
@@ -37,7 +55,7 @@ local GRUVBOX = {
   black = '#3c3836',
   skyblue = '#83a598',
   cyan = '#8e07c',
-  green = '#b8bb26',
+  green = '#8ec431',
   oceanblue = '#076678',
   blue = '#458588',
   magenta = '#d3869b',
@@ -46,6 +64,9 @@ local GRUVBOX = {
   violet = '#b16286',
   white = '#ebdbb2',
   yellow = '#fabd2f',
+  encoding = '#9b85c7',
+  fire = '#bf0000',
+  modified = '#5f005f',
 }
 
 --
@@ -80,6 +101,14 @@ local function get_filename_bg()
   return (is_buffer_modified() and 'magenta' or 'white')
 end
 
+local function get_mode_fg()
+  local cur_mode = vi_mode.get_vim_mode()
+  if MODE_COLOR_FG_INVERT[cur_mode] then
+      return 'white'
+  end
+  return 'black'
+end
+
 --- get the current buffer's file type, defaults to '[not type]'
 local function get_filetype()
   local filetype = vim.bo.filetype
@@ -87,6 +116,12 @@ local function get_filetype()
     filetype = '[no type]'
   end
   return filetype:lower()
+end
+
+local function get_encoding()
+  local enc = ((vim.bo.fenc ~= '' and vim.bo.fenc) or vim.o.enc):lower()
+  local ff = vim.o.fileformat
+  return enc .. '  ' .. ff
 end
 
 --- wrap a string with whitespaces
@@ -157,6 +192,11 @@ local function provide_filetype(_, _)
   return get_filetype()
 end
 
+-- provide the buffer's encoding
+local function provide_encoding(_, _)
+  return get_encoding()
+end
+
 --
 -- 4. build the components
 --
@@ -183,7 +223,7 @@ table.insert(components.active[LEFT], {
   -- before feline initiation
   hl = function()
     return {
-      fg = 'black',
+      fg = get_mode_fg(),
       bg = vi_mode.get_mode_color(),
     }
   end,
@@ -193,7 +233,7 @@ table.insert(components.active[LEFT], {
 table.insert(components.active[LEFT], {
   name = 'filename',
   provider = wrapped_provider(provide_filename, wrap_left),
-  right_sep = 'slant_right',
+  right_sep = 'right_filled',
   hl = function()
     return {
       bg = get_filename_bg(),
@@ -224,10 +264,20 @@ table.insert(components.active[LEFT], {
 -- insert the filetype component before the linenumber component
 table.insert(components.active[RIGHT], {
   name = 'filetype',
-  provider = wrapped_provider(provide_filetype, wrap_right),
-  left_sep = 'slant_left',
+  provider = wrapped_provider(provide_filetype, wrap),
   hl = {
-    bg = 'white',
+    bg = 'black',
+    fg = 'white',
+  },
+})
+
+-- insert the file encoding component before the linenumber component
+table.insert(components.active[RIGHT], {
+  name = 'file_encoding',
+  provider = wrapped_provider(provide_encoding, wrap_right),
+  left_sep = 'left_filled',
+  hl = {
+    bg = 'encoding',
     fg = 'black',
   },
 })

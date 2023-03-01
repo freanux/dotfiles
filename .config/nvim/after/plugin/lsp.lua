@@ -8,11 +8,11 @@ lsp.ensure_installed({
 })
 
 -- Fix Undefined global 'vim'
-lsp.configure('lua_ls', {
+lsp.configure("lua_ls", {
     settings = {
         Lua = {
             diagnostics = {
-                globals = { 'vim' }
+                globals = { "vim" }
             }
         }
     }
@@ -41,10 +41,10 @@ lsp.setup_nvim_cmp({
 lsp.set_preferences({
     suggest_lsp_servers = false,
     sign_icons = {
-        error = ' ',
-        warn = ' ',
-        hint = ' ',
-        info = ' '
+        error = " ",
+        warn = " ",
+        hint = " ",
+        info = " "
     }
 })
 

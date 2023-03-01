@@ -37,5 +37,5 @@ endfunction
 
 " ***********************************************
 lua << EOF
-    require('configs')
+    require('startup')
 EOF
