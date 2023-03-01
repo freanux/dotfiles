@@ -20,15 +20,16 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.modeline = false
 vim.opt.shortmess = "aI"
-vim.opt.pastetoggle = "<F10>"
 vim.opt.showmode = false
 vim.opt.wrap = false
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 4
 vim.opt.updatetime = 50
 vim.opt.signcolumn = "number"   -- "auto", "yes", "no", "number"
-
-vim.g.mapleader = " "
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+vim.opt.undofile = true
 
 vim.g.netrw_bufsettings = "noma nomod nu nobl nowrap ro"
 vim.g.netrw_preview = true
@@ -39,8 +40,3 @@ vim.cmd.syntax("on")
 vim.cmd.colorscheme("sorcerer")
 vim.cmd.hi("CursorLineNr guifg=#f5d442 cterm=bold")
 vim.cmd.hi("SignColumn guibg=NONE")
-
-vim.opt.swapfile = false
-vim.opt.backup = false
-vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
-vim.opt.undofile = true

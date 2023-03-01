@@ -59,7 +59,7 @@ local GRUVBOX = {
   oceanblue = '#076678',
   blue = '#458588',
   magenta = '#d3869b',
-  orange = '#d65d0e',
+  orange = '#ff9801',
   red = '#fb4934',
   violet = '#b16286',
   white = '#ebdbb2',
@@ -73,7 +73,6 @@ local GRUVBOX = {
 -- 2. setup some helpers
 --
 
---- get the current buffer's file name, defaults to '[no name]'
 local function get_filename()
   local filename = vim.api.nvim_buf_get_name(0)
   if filename == '' then
@@ -108,7 +107,15 @@ local function show_paste()
 end
 
 local function get_filename_bg()
-  return (is_buffer_modified() and 'magenta' or 'white')
+  return (is_buffer_modified() and 'modified' or 'white')
+end
+
+local function get_filename_fg()
+  return (is_buffer_modified() and 'white' or 'black')
+end
+
+local function get_readonly_fg()
+  return (is_buffer_modified() and 'red' or 'fire')
 end
 
 local function get_mode_fg()
@@ -123,7 +130,6 @@ local function get_mode_sep()
     return show_paste() and '' or 'right_filled'
 end
 
---- get the current buffer's file type, defaults to '[not type]'
 local function get_filetype()
   local filetype = vim.bo.filetype
   if filetype == '' then
@@ -135,24 +141,15 @@ end
 local function get_encoding()
   local enc = ((vim.bo.fenc ~= '' and vim.bo.fenc) or vim.o.enc):lower()
   local ff = vim.o.fileformat
-  return enc .. '  ' .. ff
+  return enc .. '  ' .. ff .. ' '
 end
 
---- wrap a string with whitespaces
 local function wrap(string)
   return ' ' .. string .. ' '
 end
 
---- wrap a string with whitespaces and add a '' on the left,
--- use on left section components for a nice  transition
-local function wrap_left(string)
-  return ' ' .. string .. ' '
-end
-
---- wrap a string with whitespaces and add a '' on the right,
--- use on left section components for a nice  transition
 local function wrap_right(string)
-  return ' ' .. string .. ' '
+  return ' ' .. string .. ''
 end
 
 --- decorate a provider with a wrapper function
@@ -168,7 +165,6 @@ end
 -- 3. setup custom providers
 --
 
---- provide the vim mode (NORMAL, INSERT, etc.)
 local function provide_mode(_, _)
   return vi_mode.get_vim_mode()
 end
@@ -187,12 +183,18 @@ local function provide_paste_opener(_, _)
   return ''
 end
 
---- provide the buffer's file name
 local function provide_filename(_, _)
-  return get_filename() .. (is_buffer_modified() and ' ●' or '') .. (is_buffer_readonly() and ' ' or '')
+  return ' ' .. get_filename() .. (is_buffer_modified() and '[+]' or '')
 end
 
---- provide the line's information (curosor position and file's total lines)
+local function provide_filename_opener(_, _)
+  return ''
+end
+
+local function provide_filename_readonly(_, _)
+  return (is_buffer_readonly() and ' ' or '')
+end
+
 local function provide_linenumber(_, _)
   local line_count = vim.api.nvim_buf_line_count(0)
   local cur_y = vim.api.nvim_win_get_cursor(0)[1]
@@ -208,12 +210,10 @@ local function provide_linenumber(_, _)
   return cur_y .. '/' .. line_count .. ':' .. string.format('%3i', cur_x) .. '  ' .. perc_pos;
 end
 
--- provide the buffer's file type
 local function provide_filetype(_, _)
   return get_filetype()
 end
 
--- provide the buffer's encoding
 local function provide_encoding(_, _)
   return get_encoding()
 end
@@ -245,6 +245,7 @@ table.insert(components.active[LEFT], {
     return {
       fg = get_mode_fg(),
       bg = vi_mode.get_mode_color(),
+      style = 'bold',
     }
   end,
 })
@@ -268,18 +269,54 @@ table.insert(components.active[LEFT], {
     return {
       fg = get_mode_fg(),
       bg = vi_mode.get_mode_color(),
+      style = 'bold',
+    }
+  end,
+})
+
+table.insert(components.active[LEFT], {
+  name = 'filename_opener',
+  provider = provide_filename_opener,
+  hl = function()
+    return {
+      bg = get_filename_bg(),
+      fg = 'black',
     }
   end,
 })
 
 table.insert(components.active[LEFT], {
   name = 'filename',
-  provider = wrapped_provider(provide_filename, wrap_left),
+  provider = provide_filename,
+  -- right_sep = 'right_filled',
+  hl = function()
+    return {
+      bg = get_filename_bg(),
+      fg = get_filename_fg(),
+    }
+  end,
+})
+
+table.insert(components.active[LEFT], {
+  name = 'readonly',
+  provider = provide_filename_readonly,
+  hl = function()
+    return {
+      bg = get_filename_bg(),
+      fg = get_readonly_fg(),
+      style = 'bold',
+    }
+  end,
+})
+
+table.insert(components.active[LEFT], {
+  name = 'filename_closer',
+  provider = ' ',
   right_sep = 'right_filled',
   hl = function()
     return {
       bg = get_filename_bg(),
-      fg = 'black',
+      fg = get_filename_fg(),
     }
   end,
 })
@@ -325,7 +362,8 @@ table.insert(components.active[RIGHT], {
 table.insert(components.active[RIGHT], {
   name = 'linenumber',
   provider = wrapped_provider(provide_linenumber, wrap),
-  left_sep = 'slant_left',
+  --left_sep = 'slant_left',
+  left_sep = 'left_filled',
   hl = {
     bg = 'skyblue',
     fg = 'black',
@@ -351,4 +389,3 @@ feline.setup({
   components = components,
   vi_mode_colors = MODE_COLORS,
 })
-
