@@ -38,5 +38,3 @@ vim.cmd.filetype("plugin indent on")
 vim.cmd.syntax("on")
 
 vim.cmd.colorscheme("sorcerer")
-vim.cmd.hi("CursorLineNr guifg=#f5d442 cterm=bold")
-vim.cmd.hi("SignColumn guibg=NONE")

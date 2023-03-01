@@ -212,3 +212,6 @@ hi vCursor                cterm=NONE             ctermbg=201   ctermfg=16
 " Set background again -- for some reason, this does not always 'take' {{{1
 set background=dark
 " }}}1
+
+hi CursorLineNr guifg=#f5d442 cterm=bold
+hi SignColumn guibg=NONE
