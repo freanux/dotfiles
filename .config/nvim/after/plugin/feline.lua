@@ -148,10 +148,6 @@ local function wrap(string)
   return ' ' .. string .. ' '
 end
 
-local function wrap_right(string)
-  return ' ' .. string .. ''
-end
-
 --- decorate a provider with a wrapper function
 -- the provider must conform to signature: (component, opts) -> string
 -- the wrapper must conform to the signature: (string) -> string
@@ -165,34 +161,12 @@ end
 -- 3. setup custom providers
 --
 
-local function provide_mode(_, _)
-  return vi_mode.get_vim_mode()
-end
-
-local function provide_paste(_, _)
-  if show_paste() then
-    return ' PASTE '
-  end
-  return ''
-end
-
-local function provide_paste_opener(_, _)
-  if show_paste() then
-    return ''
-  end
-  return ''
-end
-
 local function provide_filename(_, _)
   return ' ' .. get_filename() .. (is_buffer_modified() and '[+]' or '')
 end
 
-local function provide_filename_opener(_, _)
-  return ''
-end
-
-local function provide_filename_readonly(_, _)
-  return (is_buffer_readonly() and ' ' or '')
+local function provide_short_filename(_, _)
+  return ' ' .. vim.fn.pathshorten(vim.fn.fnamemodify(get_filename(), ':~:.')) .. (is_buffer_modified() and '[+]' or '')
 end
 
 local function provide_linenumber(_, _)
@@ -210,12 +184,11 @@ local function provide_linenumber(_, _)
   return cur_y .. '/' .. line_count .. ':' .. string.format('%3i', cur_x) .. '  ' .. perc_pos;
 end
 
-local function provide_filetype(_, _)
-  return get_filetype()
-end
-
-local function provide_encoding(_, _)
-  return get_encoding()
+local function provide_short_linenumber(_, _)
+  local line_count = vim.api.nvim_buf_line_count(0)
+  local cur_y = vim.api.nvim_win_get_cursor(0)[1]
+  local cur_x = vim.api.nvim_win_get_cursor(0)[2] + 1
+  return cur_y .. '/' .. line_count .. ':' .. cur_x
 end
 
 --
@@ -237,7 +210,9 @@ local components = {
 
 table.insert(components.active[LEFT], {
   name = 'mode',
-  provider = wrapped_provider(provide_mode, wrap),
+  provider = function()
+    return ' ' .. vi_mode.get_vim_mode() .. ' '
+  end,
   right_sep = function()
     return get_mode_sep()
   end,
@@ -252,7 +227,9 @@ table.insert(components.active[LEFT], {
 
 table.insert(components.active[LEFT], {
   name = 'paste_opener',
-  provider = provide_paste_opener,
+  provider = function()
+    return (show_paste() and '' or '')
+  end,
   hl = function()
     return {
       bg = vi_mode.get_mode_color(),
@@ -263,7 +240,9 @@ table.insert(components.active[LEFT], {
 
 table.insert(components.active[LEFT], {
   name = 'paste',
-  provider = provide_paste,
+  provider = function()
+    return (show_paste() and ' PASTE ' or '')
+  end,
   right_sep = 'right_filled',
   hl = function()
     return {
@@ -276,7 +255,7 @@ table.insert(components.active[LEFT], {
 
 table.insert(components.active[LEFT], {
   name = 'filename_opener',
-  provider = provide_filename_opener,
+  provider = '',
   hl = function()
     return {
       bg = get_filename_bg(),
@@ -288,18 +267,22 @@ table.insert(components.active[LEFT], {
 table.insert(components.active[LEFT], {
   name = 'filename',
   provider = provide_filename,
-  -- right_sep = 'right_filled',
+  short_provider = provide_short_filename,
   hl = function()
     return {
       bg = get_filename_bg(),
       fg = get_filename_fg(),
     }
   end,
+  priority = 9,
+  truncate_hide = true,
 })
 
 table.insert(components.active[LEFT], {
   name = 'readonly',
-  provider = provide_filename_readonly,
+  provider = function()
+    return (is_buffer_readonly() and ' ' or '')
+  end,
   hl = function()
     return {
       bg = get_filename_bg(),
@@ -324,45 +307,58 @@ table.insert(components.active[LEFT], {
 table.insert(components.active[LEFT], {
   provider = 'diagnostic_errors',
   hl = { fg = 'red' },
+  truncate_hide = true,
 })
 
 table.insert(components.active[LEFT], {
   provider = 'diagnostic_warnings',
   hl = { fg = 'yellow' },
+  truncate_hide = true,
 })
 
 table.insert(components.active[LEFT], {
   provider = 'diagnostic_hints',
   hl = { fg = 'cyan' },
+  truncate_hide = true,
 })
+
 table.insert(components.active[LEFT], {
   provider = 'diagnostic_info',
   hl = { fg = 'skyblue' },
+  truncate_hide = true,
 })
 
 table.insert(components.active[RIGHT], {
   name = 'filetype',
-  provider = wrapped_provider(provide_filetype, wrap),
+  provider = function()
+    return ' ' .. get_filetype() .. ' '
+  end,
   hl = {
     bg = 'black',
     fg = 'white',
   },
+  priority = -9,
+  truncate_hide = true
 })
 
 table.insert(components.active[RIGHT], {
   name = 'file_encoding',
-  provider = wrapped_provider(provide_encoding, wrap_right),
+  provider = function()
+    return ' ' .. get_encoding() .. ''
+  end,
   left_sep = 'left_filled',
   hl = {
     bg = 'encoding',
     fg = 'black',
   },
+  priority = -8,
+  truncate_hide = true,
 })
 
 table.insert(components.active[RIGHT], {
   name = 'linenumber',
   provider = wrapped_provider(provide_linenumber, wrap),
-  --left_sep = 'slant_left',
+  short_provider = wrapped_provider(provide_short_linenumber, wrap),
   left_sep = 'left_filled',
   hl = {
     bg = 'skyblue',
