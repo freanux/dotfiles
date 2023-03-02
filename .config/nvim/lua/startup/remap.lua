@@ -4,6 +4,18 @@ vim.opt.pastetoggle = "<F10>"
 -- ***********************************************
 -- **** toggle LSP                            ****
 -- ***********************************************
+vim.keymap.set("n", "<C-o>", vim.cmd.tabprevious)
+vim.keymap.set("n", "<C-p>"	,vim.cmd.tabnext)
+vim.keymap.set("n", "<C-t>" ,vim.cmd.tabnew)
+vim.keymap.set("n", "<C-c>", vim.cmd.tabclose)
+vim.keymap.set("i", "<C-o>", vim.cmd.tabprevious)
+vim.keymap.set("i", "<C-p>"	,vim.cmd.tabnext)
+vim.keymap.set("i", "<C-t>" ,vim.cmd.tabnew)
+vim.keymap.set("i", "<C-c>", vim.cmd.tabclose)
+
+-- ***********************************************
+-- **** toggle LSP                            ****
+-- ***********************************************
 vim.keymap.set("n", "<C-F1>", ":lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>")
 vim.keymap.set("i", "<C-F1>", "<ESC>:lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>a")
 vim.keymap.set("n", "<S-F1>", ":edit<CR>")

@@ -215,3 +215,8 @@ set background=dark
 
 hi CursorLineNr guifg=#f5d442 cterm=bold
 hi SignColumn guibg=NONE
+
+hi TabLine                gui=NONE             guifg=#ebdbb2   guibg=#3c3836
+hi TabLineFill            gui=NONE             guifg=#ebdbb2   guibg=#3c3836
+hi TabLineSel             gui=NONE             guifg=#3c3836   guibg=#ebdbb2
+
