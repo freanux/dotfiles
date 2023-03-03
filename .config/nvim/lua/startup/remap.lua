@@ -1,8 +1,9 @@
 vim.g.mapleader = " "
 vim.opt.pastetoggle = "<F10>"
+vim.keymap.set("n", "q", "<Nop>")    -- turn off recording
 
 -- ***********************************************
--- **** toggle LSP                            ****
+-- **** tab keys                              ****
 -- ***********************************************
 vim.keymap.set("n", "<C-o>", vim.cmd.tabprevious)
 vim.keymap.set("n", "<C-p>"	,vim.cmd.tabnext)

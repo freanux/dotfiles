@@ -63,7 +63,7 @@ local GRUVBOX = {
   red = '#fb4934',
   violet = '#b16286',
   white = '#ebdbb2',
-  yellow = '#fabd2f',
+  yellow = '#fadc2f',
   encoding = '#9b85c7',
   fire = '#bf0000',
   modified = '#5f005f',
@@ -72,6 +72,28 @@ local GRUVBOX = {
 --
 -- 2. setup some helpers
 --
+
+local function get_mode_fg()
+  local cur_mode = vi_mode.get_vim_mode()
+  if MODE_COLOR_FG_INVERT[cur_mode] then
+      return 'white'
+  end
+  return 'black'
+end
+
+local function is_in_paste_mode()
+    return vim.fn['IsInPasteMode']() == 1
+end
+
+local function show_paste()
+  if is_in_paste_mode() then
+    local cur_mode = vi_mode.get_vim_mode()
+    if cur_mode == 'INSERT' or cur_mode == 'REPLACE' then
+      return true
+    end
+  end
+  return false
+end
 
 local function get_filename()
   local filename = vim.api.nvim_buf_get_name(0)
@@ -92,18 +114,8 @@ local function is_buffer_readonly()
     return vim.bo[vim.api.nvim_win_get_buf(0)].readonly
 end
 
-local function is_in_paste_mode()
-    return vim.fn['IsInPasteMode']() == 1
-end
-
-local function show_paste()
-  if is_in_paste_mode() then
-    local cur_mode = vi_mode.get_vim_mode()
-    if cur_mode == 'INSERT' or cur_mode == 'REPLACE' then
-      return true
-    end
-  end
-  return false
+local function get_modified_appendix()
+  return (is_buffer_modified() and '[+]' or '')
 end
 
 local function get_filename_bg()
@@ -116,32 +128,6 @@ end
 
 local function get_readonly_fg()
   return (is_buffer_modified() and 'red' or 'fire')
-end
-
-local function get_mode_fg()
-  local cur_mode = vi_mode.get_vim_mode()
-  if MODE_COLOR_FG_INVERT[cur_mode] then
-      return 'white'
-  end
-  return 'black'
-end
-
-local function get_mode_sep()
-    return show_paste() and '' or 'right_filled'
-end
-
-local function get_filetype()
-  local filetype = vim.bo.filetype
-  if filetype == '' then
-    filetype = '[no type]'
-  end
-  return filetype:lower()
-end
-
-local function get_encoding()
-  local enc = ((vim.bo.fenc ~= '' and vim.bo.fenc) or vim.o.enc):lower()
-  local ff = vim.o.fileformat
-  return enc .. '  ' .. ff .. ' '
 end
 
 local function wrap(string)
@@ -162,11 +148,11 @@ end
 --
 
 local function provide_filename(_, _)
-  return ' ' .. get_filename() .. (is_buffer_modified() and '[+]' or '')
+  return ' ' .. get_filename() .. get_modified_appendix()
 end
 
 local function provide_short_filename(_, _)
-  return ' ' .. vim.fn.pathshorten(vim.fn.fnamemodify(get_filename(), ':~:.')) .. (is_buffer_modified() and '[+]' or '')
+  return ' ' .. vim.fn.pathshorten(get_filename()) .. get_modified_appendix()
 end
 
 local function provide_linenumber(_, _)
@@ -214,7 +200,7 @@ table.insert(components.active[LEFT], {
     return ' ' .. vi_mode.get_vim_mode() .. ' '
   end,
   right_sep = function()
-    return get_mode_sep()
+    return show_paste() and '' or 'right_filled'
   end,
   hl = function()
     return {
@@ -331,7 +317,11 @@ table.insert(components.active[LEFT], {
 table.insert(components.active[RIGHT], {
   name = 'filetype',
   provider = function()
-    return ' ' .. get_filetype() .. ' '
+	  local filetype = vim.bo.filetype
+	  if filetype == '' then
+		filetype = '[no type]'
+	  end
+   	  return ' ' .. filetype:lower() .. ' '
   end,
   hl = {
     bg = 'black',
@@ -344,7 +334,9 @@ table.insert(components.active[RIGHT], {
 table.insert(components.active[RIGHT], {
   name = 'file_encoding',
   provider = function()
-    return ' ' .. get_encoding() .. ''
+	  local enc = ((vim.bo.fenc ~= '' and vim.bo.fenc) or vim.o.enc):lower()
+	  local ff = vim.o.fileformat
+      return ' ' .. enc .. '  ' .. ff .. ' '
   end,
   left_sep = 'left_filled',
   hl = {
