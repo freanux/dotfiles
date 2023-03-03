@@ -3,7 +3,6 @@ require('feline').setup()
 local feline = require('feline')
 local vi_mode = require('feline.providers.vi_mode')
 
---
 -- 1. define some constants
 --
 
@@ -31,21 +30,7 @@ local MODE_COLORS = {
 }
 
 local MODE_COLOR_FG_INVERT = {
-  ['NORMAL'] = false,
-  ['COMMAND'] = false,
-  ['INSERT'] = false,
   ['REPLACE'] = true,
-  ['LINES'] = false,
-  ['VISUAL'] = false,
-  ['OP'] = false,
-  ['BLOCK'] = false,
-  ['V-REPLACE'] = false,
-  ['ENTER'] = false,
-  ['MORE'] = false,
-  ['SELECT'] = false,
-  ['SHELL'] = false,
-  ['TERM'] = false,
-  ['NONE'] = false,
 }
 
 -- gruvbox theme
