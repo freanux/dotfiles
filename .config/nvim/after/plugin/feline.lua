@@ -29,8 +29,8 @@ local MODE_COLORS = {
   ['NONE'] = 'yellow',
 }
 
-local MODE_COLOR_FG_INVERT = {
-  ['REPLACE'] = true,
+local MODE_COLORS_FG = {
+  ['REPLACE'] = 'white',
 }
 
 -- gruvbox theme
@@ -59,11 +59,8 @@ local GRUVBOX = {
 --
 
 local function get_mode_fg()
-  local cur_mode = vi_mode.get_vim_mode()
-  if MODE_COLOR_FG_INVERT[cur_mode] then
-      return 'white'
-  end
-  return 'black'
+  local mode_color = MODE_COLORS_FG[vi_mode.get_vim_mode()]
+  return (mode_color == nil and 'black' or mode_color)
 end
 
 local function is_in_paste_mode()
