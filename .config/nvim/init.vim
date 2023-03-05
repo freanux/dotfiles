@@ -31,11 +31,6 @@ call plug#begin()
 call plug#end()
 
 " ***********************************************
-function! IsInPasteMode()
-    return &paste
-endfunction
-
-" ***********************************************
 lua << EOF
     require('startup')
 EOF

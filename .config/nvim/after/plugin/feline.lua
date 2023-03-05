@@ -30,7 +30,7 @@ local MODE_COLORS = {
 }
 
 local MODE_COLORS_FG = {
-  ['REPLACE'] = 'white',
+  ['REPLACE'] = 'bright',
 }
 
 -- gruvbox theme
@@ -52,19 +52,29 @@ local GRUVBOX = {
   encoding = '#9b85c7',
   fire = '#bf0000',
   modified = '#5f005f',
+  bright = '#ffffff',
 }
 
 --
 -- 2. setup some helpers
 --
+--
+
+local function is_in_paste_mode()
+    return vim.api.nvim_get_option("paste")
+end
+
+local function is_buffer_modified()
+  return vim.bo[vim.api.nvim_win_get_buf(0)].modified
+end
+
+local function is_buffer_readonly()
+    return vim.bo[vim.api.nvim_win_get_buf(0)].readonly
+end
 
 local function get_mode_fg()
   local mode_color = MODE_COLORS_FG[vi_mode.get_vim_mode()]
   return (mode_color == nil and 'black' or mode_color)
-end
-
-local function is_in_paste_mode()
-    return vim.fn['IsInPasteMode']() == 1
 end
 
 local function show_paste()
@@ -86,14 +96,6 @@ local function get_filename()
   -- from the absilute path of the filename in order to make the filename
   -- relative to the current working directory
   return vim.fn.fnamemodify(filename, ':~:.')
-end
-
-local function is_buffer_modified()
-  return vim.bo[vim.api.nvim_win_get_buf(0)].modified
-end
-
-local function is_buffer_readonly()
-    return vim.bo[vim.api.nvim_win_get_buf(0)].readonly
 end
 
 local function get_modified_appendix()
