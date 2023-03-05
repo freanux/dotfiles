@@ -58,10 +58,9 @@ local GRUVBOX = {
 --
 -- 2. setup some helpers
 --
---
 
 local function is_in_paste_mode()
-    return vim.api.nvim_get_option("paste")
+  return vim.api.nvim_get_option("paste")
 end
 
 local function is_buffer_modified()
@@ -69,7 +68,11 @@ local function is_buffer_modified()
 end
 
 local function is_buffer_readonly()
-    return vim.bo[vim.api.nvim_win_get_buf(0)].readonly
+  return vim.bo[vim.api.nvim_win_get_buf(0)].readonly
+end
+
+local function is_root()
+  return (vim.loop.getuid() == 0)
 end
 
 local function get_mode_fg()
@@ -112,6 +115,18 @@ end
 
 local function get_readonly_fg()
   return (is_buffer_modified() and 'red' or 'fire')
+end
+
+local function get_root_indicator_opener()
+  if is_root() then
+    return ''
+  end
+end
+
+local function get_root_indicator()
+  if is_root() then
+    return ' ROOT '
+  end
 end
 
 local function wrap(string)
@@ -342,13 +357,64 @@ table.insert(components.active[RIGHT], {
   },
 })
 
+table.insert(components.active[RIGHT], {
+  name = 'root_indicator_opener',
+  provider = get_root_indicator_opener(),
+  hl = {
+    bg = 'skyblue',
+    fg = 'fire',
+  }
+})
+
+table.insert(components.active[RIGHT], {
+  name = 'root_indicator',
+  provider = get_root_indicator(),
+  hl = {
+    bg = 'fire',
+    fg = 'bright',
+    style = 'bold',
+  },
+})
+
 table.insert(components.inactive[LEFT], {
   name = 'filename_inactive',
-  provider = wrapped_provider(provide_filename, wrap),
-  right_sep = 'slant_right',
+  provider = provide_filename,
   hl = {
     fg = 'white',
     bg = 'bg',
+  },
+})
+
+table.insert(components.inactive[LEFT], {
+  name = 'readonly',
+  provider = function()
+    return (is_buffer_readonly() and ' ' or '')
+  end,
+  hl = function()
+    return {
+      bg = 'black',
+      fg = 'red',
+      style = 'bold',
+    }
+  end,
+})
+
+table.insert(components.inactive[RIGHT], {
+  name = 'root_indicator_opener',
+  provider = get_root_indicator_opener(),
+  hl = {
+    bg = 'black',
+    fg = 'fire',
+  }
+})
+
+table.insert(components.inactive[RIGHT], {
+  name = 'root_indicator',
+  provider = get_root_indicator(),
+  hl = {
+    bg = 'fire',
+    fg = 'bright',
+    style = 'bold',
   },
 })
 
