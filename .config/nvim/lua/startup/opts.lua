@@ -31,8 +31,11 @@ vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
 
-vim.g.netrw_bufsettings = "noma nomod nu nobl nowrap ro"
-vim.g.netrw_preview = true
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- vim.g.netrw_bufsettings = "noma nomod nu nobl nowrap ro"
+-- vim.g.netrw_preview = true
 
 vim.cmd.filetype("plugin indent on")
 vim.cmd.syntax("on")

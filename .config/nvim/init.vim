@@ -2,6 +2,7 @@
 " https://github.com/junegunn/vim-plug/
 call plug#begin()
     Plug 'nvim-tree/nvim-web-devicons'
+    Plug 'nvim-tree/nvim-tree.lua'
     Plug 'feline-nvim/feline.nvim', { 'branch': '0.5-compat' }
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
