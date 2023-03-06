@@ -199,7 +199,7 @@ table.insert(components.active[LEFT], {
     return ' ' .. vi_mode.get_vim_mode() .. ' '
   end,
   right_sep = function()
-    return show_paste() and '' or 'right_filled'
+    return (show_paste() and '' or 'right_filled')
   end,
   hl = function()
     return {

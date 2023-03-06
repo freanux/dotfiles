@@ -10,11 +10,14 @@ require("nvim-tree").setup({
 vim.keymap.set("n", "<F4>", vim.cmd.NvimTreeToggle)
 vim.keymap.set("i", "<F4>", vim.cmd.NvimTreeToggle)
 
-vim.keymap.set("n", "<C-F3>", ":NvimTreeResize -5<CR>")
-vim.keymap.set("i", "<C-F3>", "<ESC>:NvimTreeResize -5<CR>i")
+vim.keymap.set("n", "<C-F3>", "<cmd>NvimTreeResize -5<CR>")
+vim.keymap.set("i", "<C-F3>", "<cmd>NvimTreeResize -5<CR>")
 
-vim.keymap.set("n", "<C-F4>", ":NvimTreeResize +5<CR>")
-vim.keymap.set("i", "<C-F4>", "<ESC>:NvimTreeResize +5<CR>i")
+vim.keymap.set("n", "<C-F4>", "<cmd>NvimTreeResize +5<CR>")
+vim.keymap.set("i", "<C-F4>", "<cmd>:NvimTreeResize +5<CR>")
+
+vim.keymap.set("n", "<C-S-F4>", vim.cmd.NvimTreeRefresh)
+vim.keymap.set("i", "<C-S-F4>", vim.cmd.NvimTreeRefresh)
 
 --[[
 --
