@@ -29,9 +29,12 @@ call plug#begin()
 
 	" LSP zero
 	Plug 'VonHeikemen/lsp-zero.nvim'
+
+    " DAP debugging
+    Plug 'mfussenegger/nvim-dap'
+    Plug 'rcarriga/nvim-dap-ui'
+    Plug 'ldelossa/nvim-dap-projects'
 call plug#end()
 
 " ***********************************************
-lua << EOF
-    require('startup')
-EOF
+lua require('startup')
