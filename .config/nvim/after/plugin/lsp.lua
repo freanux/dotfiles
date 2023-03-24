@@ -18,7 +18,6 @@ lsp.configure("lua_ls", {
     }
 })
 
---[[
 local cmp = require('cmp')
 local cmp_select = {behavior = cmp.SelectBehavior.Select}
 local cmp_mappings = lsp.defaults.cmp_mappings({
@@ -27,8 +26,14 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
   ['<PageUp>'] = cmp.mapping.scroll_docs(-15),
   ['<PageDown>'] = cmp.mapping.scroll_docs(15),
   ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-  ["<C-Space>"] = cmp.mapping.complete(),
+  ['<C-Space>'] = cmp.mapping.complete(),
 })
+cmp.setup.buffer { enabled = false }
+
+vim.keymap.set("n", "<C-s>", function() require('cmp').setup.buffer { enabled = false } end, {})
+vim.keymap.set("i", "<C-s>", function() require('cmp').setup.buffer { enabled = false } end, {})
+vim.keymap.set("n", "<C-x>", function() require('cmp').setup.buffer { enabled = true } end, {})
+vim.keymap.set("i", "<C-x>", function() require('cmp').setup.buffer { enabled = true } end, {})
 
 cmp_mappings['<Tab>'] = nil
 cmp_mappings['<S-Tab>'] = nil
@@ -36,7 +41,6 @@ cmp_mappings['<S-Tab>'] = nil
 lsp.setup_nvim_cmp({
   mapping = cmp_mappings
 })
---]]
 
 lsp.set_preferences({
     suggest_lsp_servers = false,
