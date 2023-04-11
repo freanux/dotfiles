@@ -147,6 +147,7 @@ alias l='ls -CF'
 alias s='ssh -p99999 user@host'
 alias jc="journalctl"
 alias sc="systemctl"
+alias ta="tmux att"
 
 ################################################################################################
 # BINDS
