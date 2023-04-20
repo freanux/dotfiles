@@ -74,6 +74,16 @@ lsp.on_attach(function(_, bufnr)
   vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 end)
 
+local wk = require("which-key")
+wk.register({
+    v = {
+        name = "LSP",
+        w = { name = "Workspace" },
+        c = { name = "Code" },
+        r = { name = "Reference" },
+    },
+}, { prefix = "<leader>" })
+
 lsp.setup()
 
 vim.diagnostic.config({
