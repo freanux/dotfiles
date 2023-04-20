@@ -9,6 +9,7 @@ call plug#begin()
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'mbbill/undotree'
     Plug 'theprimeagen/harpoon'
+    Plug 'folke/which-key.nvim'
 
     " LSP support
     Plug 'williamboman/mason.nvim'

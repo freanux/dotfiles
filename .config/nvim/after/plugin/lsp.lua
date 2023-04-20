@@ -35,6 +35,11 @@ vim.keymap.set("i", "<C-s>", function() require('cmp').setup.buffer { enabled = 
 vim.keymap.set("n", "<C-x>", function() require('cmp').setup.buffer { enabled = true } end, {})
 vim.keymap.set("i", "<C-x>", function() require('cmp').setup.buffer { enabled = true } end, {})
 
+vim.keymap.set("n", "<C-F1>", ":lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>")
+vim.keymap.set("i", "<C-F1>", "<ESC>:lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>a")
+vim.keymap.set("n", "<S-F1>", ":edit<CR>")
+vim.keymap.set("i", "<S-F1>", "<ESC>:edit<CR>a")
+
 cmp_mappings['<Tab>'] = nil
 cmp_mappings['<S-Tab>'] = nil
 

@@ -15,14 +15,6 @@ vim.keymap.set("i", "<C-t>", vim.cmd.tabnew)
 vim.keymap.set("i", "<C-c>", vim.cmd.tabclose)
 
 -- ***********************************************
--- **** toggle LSP                            ****
--- ***********************************************
-vim.keymap.set("n", "<C-F1>", ":lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>")
-vim.keymap.set("i", "<C-F1>", "<ESC>:lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>a")
-vim.keymap.set("n", "<S-F1>", ":edit<CR>")
-vim.keymap.set("i", "<S-F1>", "<ESC>:edit<CR>a")
-
--- ***********************************************
 -- **** file explorer and window key mappings ****
 -- ***********************************************
 
