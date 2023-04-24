@@ -16,16 +16,5 @@ vim.keymap.set("i", "<C-F3>", "<cmd>NvimTreeResize -5<CR>")
 vim.keymap.set("n", "<C-F4>", "<cmd>NvimTreeResize +5<CR>")
 vim.keymap.set("i", "<C-F4>", "<cmd>:NvimTreeResize +5<CR>")
 
-vim.keymap.set("n", "<C-S-F4>", vim.cmd.NvimTreeRefresh)
-vim.keymap.set("i", "<C-S-F4>", vim.cmd.NvimTreeRefresh)
-
---[[
---
--- i am too stupid to add parameters on a command. -.-
---
-vim.keymap.set("n", "<C-F3>", vim.cmd.NvimTreeResize("-5"))
-vim.keymap.set("i", "<C-F3>", vim.cmd.NvimTreeResize("-5"))
-
-vim.keymap.set("n", "<C-F4>", vim.cmd.NvimTreeResize("+5"))
-vim.keymap.set("i", "<C-F4>", vim.cmd.NvimTreeResize("+5"))
-]]
+-- vim.keymap.set("n", "<C-S-F4>", vim.cmd.NvimTreeRefresh)
+-- vim.keymap.set("i", "<C-S-F4>", vim.cmd.NvimTreeRefresh)

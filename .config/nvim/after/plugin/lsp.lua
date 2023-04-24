@@ -30,10 +30,10 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
 })
 cmp.setup.buffer { enabled = false }
 
-vim.keymap.set("n", "<C-s>", function() require('cmp').setup.buffer { enabled = false } end, {})
-vim.keymap.set("i", "<C-s>", function() require('cmp').setup.buffer { enabled = false } end, {})
-vim.keymap.set("n", "<C-x>", function() require('cmp').setup.buffer { enabled = true } end, {})
-vim.keymap.set("i", "<C-x>", function() require('cmp').setup.buffer { enabled = true } end, {})
+vim.keymap.set({"n", "i"}, "<C-s>", function() require('cmp').setup.buffer { enabled = false } end, {})
+vim.keymap.set({"n", "i"}, "<C-x>", function() require('cmp').setup.buffer { enabled = true } end, {})
+-- vim.keymap.set("i", "<C-s>", function() require('cmp').setup.buffer { enabled = false } end, {})
+-- vim.keymap.set("i", "<C-x>", function() require('cmp').setup.buffer { enabled = true } end, {})
 
 vim.keymap.set("n", "<C-F1>", ":lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>")
 vim.keymap.set("i", "<C-F1>", "<ESC>:lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>a")
@@ -60,7 +60,8 @@ lsp.set_preferences({
 lsp.on_attach(function(_, bufnr)
   local opts = {buffer = bufnr, remap = false}
 
-  vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
+  vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { buffer = bufnr, remap = false, desc = "Jump Definition" })
+  vim.keymap.set("n", "gb", "<C-o>", { buffer = bufnr, remap = false, desc = "Jump Back" })
   vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
   --vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
   --vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
