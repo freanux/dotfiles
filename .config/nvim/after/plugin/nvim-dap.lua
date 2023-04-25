@@ -1,6 +1,6 @@
 local dap = require("dap")
+local widgets = require("dap.ui.widgets")
 
-local widgets = require('dap.ui.widgets')
 local frames = widgets.centered_float(widgets.frames)
 local scopes = widgets.centered_float(widgets.scopes)
 local sessions = widgets.centered_float(widgets.sessions)
@@ -17,6 +17,86 @@ end
 
 close_all_dap_widgets()
 
+-- DAP UI ---------------------------------------------------------------------
+local dapui = require("dapui")
+dapui.setup(
+  {
+    controls = {
+      element = "repl",
+      enabled = true,
+      icons = {
+        disconnect = "",
+        pause = "",
+        play = "",
+        run_last = "",
+        step_back = "",
+        step_into = "",
+        step_out = "",
+        step_over = "",
+        terminate = ""
+      }
+    },
+    element_mappings = {},
+    expand_lines = true,
+    floating = {
+      border = "single",
+      mappings = {
+        close = { "q", "<Esc>" }
+      }
+    },
+    force_buffers = true,
+    icons = {
+      collapsed = "",
+      current_frame = "",
+      expanded = ""
+    },
+    layouts = { {
+        elements = { {
+            id = "scopes",
+            size = 0.25
+          }, {
+            id = "breakpoints",
+            size = 0.25
+          }, {
+            id = "stacks",
+            size = 0.25
+          }, {
+            id = "watches",
+            size = 0.25
+          } },
+        position = "left",
+        size = 40
+      }, {
+        elements = {
+          {
+            id = "repl",
+            size = 1.0
+          },
+        },
+        position = "bottom",
+        size = 10
+      } },
+    mappings = {
+      edit = "e",
+      expand = { "<CR>", "<2-LeftMouse>" },
+      open = "o",
+      remove = "d",
+      repl = "r",
+      toggle = "t"
+    },
+    render = {
+      indent = 1,
+      max_value_lines = 100
+    }
+  }
+)
+
+vim.keymap.set("n", "<C-F12>", dapui.toggle, { desc = "Toggle DAP UI"  })
+
+dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
+dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
+dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
+
 -- prepare icons --------------------------------------------------------------
 vim.api.nvim_set_hl(0, 'DapBreakpoint', { ctermbg = 0, fg = '#993939', bg = '#31353f' })
 vim.api.nvim_set_hl(0, 'DapLogPoint', { ctermbg = 0, fg = '#61afef', bg = '#31353f' })
@@ -30,17 +110,14 @@ vim.fn.sign_define('DapStopped', { text='', texthl='DapStopped', linehl='DapS
 
 -- key bindings ---------------------------------------------------------------
 vim.keymap.set("n", "<C-S-Esc>", function() close_all_dap_widgets() end, { desc = "Close All DAP Widgets" })
-vim.keymap.set("n", "<C-S-F1>", frames.toggle, { desc = "Frames Toggle" })
-vim.keymap.set("n", "<C-S-F2>", scopes.toggle, { desc = "Scopes Toggle" })
-vim.keymap.set("n", "<C-S-F3>", threads.toggle, { desc = "Threads Toggle" })
-vim.keymap.set("n", "<C-S-F4>", expression.toggle, { desc = "Expression Toggle" })
+vim.keymap.set("n", "<C-S-F1>", "80<C-w>|", { desc = "Set Vertical to 80" })
+vim.keymap.set("n", "<C-S-F4>", dapui.eval, { desc = "Evaluate Expression Under Cursor" })
 
 vim.keymap.set("n", "<C-F5>", dap.continue, { desc = "Start, Continue, Restart Session" })
 vim.keymap.set("n", "<C-S-F5>", dap.terminate, { desc = "Terminate Session" })
 
-vim.keymap.set("n", "<C-F8>", dap.repl.toggle, { desc = "REPL Toggle" })
-
 vim.keymap.set("n", "<C-F9>", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
+vim.keymap.set("n", "<C-S-F9>", dap.clear_breakpoints, { desc = "Delete All Breakpoints" })
 vim.keymap.set("n", "<C-F11>", dap.step_into, { desc = "Step Into" })
 vim.keymap.set("n", "<C-S-F11>", dap.step_out, { desc = "Step Out" })
 vim.keymap.set("n", "<C-F10>", dap.step_over, { desc = "Step Over" })
@@ -54,9 +131,11 @@ wk.register({
         t = { dap.terminate, "Terminate Session <CTRL-SHIFT-F5>" },
         o = { dap.repl.toggle, "REPL Toggle <CTRL-F8>" },
         b = { dap.toggle_breakpoint, "Toggle Breakpoint <CTRL-F9>" },
+        d = { dap.clear_breakpoints, "Delete All Breakpoints <CTRL-SHIFT-F9>" },
         s = { dap.step_over, "Step Over <CTRL-F10>" },
         p = { dap.step_out, "Step Out <CTRL-SHIFT-F11>" },
         i = { dap.step_into, "Step Into <CTRL-F11>" },
+        u = { dapui.toggle, "Toggle DAP UI <CTRL-F12>" },
         w = {
             name = "Toggle Widgets",
             c = { function() close_all_dap_widgets() end, "Close All Floats" },
@@ -77,17 +156,52 @@ dap.adapters.lldb = {
     name = "lldb",
 }
 
+dap.adapters.cppdbg = {
+    type = "executable",
+    command = "/usr/bin/gdb",
+    name = "cppdbg",
+    id = "cppdbg",
+    MIMode = "gdb",
+}
+
 dap.configurations.cpp = {
     {
-      name = "Launch",
+      name = "Launch LLDB",
       type = "lldb",
       request = "launch",
       program = function()
-        return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
       end,
-      cwd = '${workspaceFolder}',
+      cwd = "${workspaceFolder}",
       stopOnEntry = false,
       args = {},
       runInTerminal = true,
     },
+--[[
+    {
+      name = "Launch GDB",
+      type = "cppdbg",
+      request = "launch",
+      MIMode = "gdb",
+      program = function()
+        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+      end,
+      cwd = "${workspaceFolder}",
+      stopOnEntry = false,
+      args = {},
+      runInTerminal = true,
+    },
+    {
+    name = "Attach to gdbserver :1234",
+    type = "cppdbg",
+    request = "launch",
+    MIMode = "gdb",
+    miDebuggerServerAddress = "localhost:1234",
+    miDebuggerPath = "/usr/bin/gdb",
+    cwd = "${workspaceFolder}",
+    program = function()
+      return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+    end,
+  },
+--]]
 }

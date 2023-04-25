@@ -4,12 +4,15 @@ call plug#begin()
     Plug 'nvim-tree/nvim-web-devicons'
     Plug 'nvim-tree/nvim-tree.lua'
     Plug 'feline-nvim/feline.nvim', { 'branch': '0.5-compat' }
+    Plug 'nvim-lua/popup.nvim'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'mbbill/undotree'
     Plug 'theprimeagen/harpoon'
     Plug 'folke/which-key.nvim'
+    Plug 's1n7ax/nvim-window-picker'
+    Plug 'sudormrfbin/cheatsheet.nvim'
 
     " LSP support
     Plug 'williamboman/mason.nvim'
