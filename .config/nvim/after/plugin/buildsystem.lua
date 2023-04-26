@@ -7,15 +7,17 @@
 local Path = require("plenary.path")
 
 local Defaults = {
-    prepare = "autoreconf -i",
-    configure_help = "./configure --help",
-    configure_params = "",
-    configure_debug = "CPPFLAGS=-DDEBUG CFLAGS=\"-g -O0\" CXXFLAGS=\"-g -O0\" ./configure",
-    configure_release = "CFLAGS=\"-O3\" CXXFLAGS=\"-O3\" ./configure",
-    make_clean = "make clean",
-    make = "make -j`nproc`",
-    strip_filename = "",
-    strip = "strip",
+    GNU = {
+        prepare = "autoreconf -i",
+        configure_help = "./configure --help",
+        configure_params = "",
+        configure_debug = "CPPFLAGS=-DDEBUG CFLAGS=\"-g -O0\" CXXFLAGS=\"-g -O0\" ./configure",
+        configure_release = "CFLAGS=\"-O3\" CXXFLAGS=\"-O3\" ./configure",
+        make_clean = "make clean",
+        make = "make -j`nproc`",
+        strip_filename = "",
+        strip = "strip",
+    },
 }
 
 Config = Defaults
@@ -51,22 +53,23 @@ local function get_config()
     end
 end
 
+-- GNU ------------------------------------------------------------------------
 local function autoreconf()
     get_config()
-    exec(Config.prepare)
+    exec(Config.GNU.prepare)
 end
 
 local function configure_help()
     get_config()
-    exec(Config.configure_help)
+    exec(Config.GNU.configure_help)
 end
 
 local function configure_debug()
     get_config()
-    local params = vim.fn.input("Configure Params: ", Config.configure_params)
+    local params = vim.fn.input("Configure Params: ", Config.GNU.configure_params)
     if not is_empty(params) then
-        Config.configure_params = params
-        exec(Config.configure_debug .. " " .. Config.configure_params)
+        Config.GNU.configure_params = params
+        exec(Config.GNU.configure_debug .. " " .. Config.GNU.configure_params)
     else
         print("abort...")
     end
@@ -74,10 +77,10 @@ end
 
 local function configure_release()
     get_config()
-    local params = vim.fn.input("Configure Params: ", Config.configure_params)
+    local params = vim.fn.input("Configure Params: ", Config.GNU.configure_params)
     if not is_empty(params) then
-        Config.configure_params = params
-        exec(Config.configure_release .. " " .. Config.configure_params)
+        Config.GNU.configure_params = params
+        exec(Config.GNU.configure_release .. " " .. Config.GNU.configure_params)
     else
         print("abort...")
     end
@@ -85,20 +88,20 @@ end
 
 local function make_clean()
     get_config()
-    exec(Config.make_clean)
+    exec(Config.GNU.make_clean)
 end
 
 local function make()
     get_config()
-    exec(Config.make)
+    exec(Config.GNU.make)
 end
 
 local function strip()
     get_config()
-    local filename = vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/" .. Config.strip_filename, "file")
+    local filename = vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/" .. Config.GNU.strip_filename, "file")
     if not is_empty(filename) then
-        Config.strip_filename = vim.fn.fnamemodify(filename, ":t")
-        exec(Config.strip .. " " .. vim.fn.getcwd() .. "/" .. Config.strip_filename)
+        Config.GNU.strip_filename = vim.fn.fnamemodify(filename, ":t")
+        exec(Config.GNU.strip .. " " .. vim.fn.getcwd() .. "/" .. Config.GNU.strip_filename)
     else
         print("abort...")
     end
