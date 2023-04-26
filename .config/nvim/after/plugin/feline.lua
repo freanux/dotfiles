@@ -96,7 +96,7 @@ local function get_filename()
     filename = '[no name]'
   end
   -- this is some vim magic to remove the current working directory path
-  -- from the absilute path of the filename in order to make the filename
+  -- from the absolute path of the filename in order to make the filename
   -- relative to the current working directory
   return vim.fn.fnamemodify(filename, ':~:.')
 end
