@@ -17,6 +17,10 @@ end
 
 close_all_dap_widgets()
 
+local function is_empty(s)
+    return s == nil or s == ''
+end
+
 -- DAP UI ---------------------------------------------------------------------
 local dapui = require("dapui")
 dapui.setup(
@@ -126,7 +130,7 @@ vim.keymap.set("n", "<C-F10>", dap.step_over, { desc = "Step Over" })
 local wk = require("which-key")
 wk.register({
     d = {
-        name = "DAP",
+        name = "Debugging",
         c = { dap.continue, "Start, Continue, Restart Session <CTRL-F5>" },
         t = { dap.terminate, "Terminate Session <CTRL-SHIFT-F5>" },
         o = { dap.repl.toggle, "REPL Toggle <CTRL-F8>" },
@@ -170,38 +174,16 @@ dap.configurations.cpp = {
       type = "lldb",
       request = "launch",
       program = function()
-        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+        BSFuncs.read_config()
+        local filename = is_empty(Config.executable) and vim.fn.fnamemodify(vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file"), ":t") or Config.executable
+        return vim.fn.getcwd() .. "/" .. filename
       end,
       cwd = "${workspaceFolder}",
       stopOnEntry = false,
-      args = {},
-      runInTerminal = true,
-    },
---[[
-    {
-      name = "Launch GDB",
-      type = "cppdbg",
-      request = "launch",
-      MIMode = "gdb",
-      program = function()
-        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+      args = function()
+        BSFuncs.read_config()
+        return Config.args
       end,
-      cwd = "${workspaceFolder}",
-      stopOnEntry = false,
-      args = {},
       runInTerminal = true,
     },
-    {
-    name = "Attach to gdbserver :1234",
-    type = "cppdbg",
-    request = "launch",
-    MIMode = "gdb",
-    miDebuggerServerAddress = "localhost:1234",
-    miDebuggerPath = "/usr/bin/gdb",
-    cwd = "${workspaceFolder}",
-    program = function()
-      return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-    end,
-  },
---]]
 }

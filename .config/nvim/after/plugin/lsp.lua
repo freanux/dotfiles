@@ -32,13 +32,15 @@ cmp.setup.buffer { enabled = false }
 
 vim.keymap.set({"n", "i"}, "<C-s>", function() require('cmp').setup.buffer { enabled = false } end, {})
 vim.keymap.set({"n", "i"}, "<C-x>", function() require('cmp').setup.buffer { enabled = true } end, {})
--- vim.keymap.set("i", "<C-s>", function() require('cmp').setup.buffer { enabled = false } end, {})
--- vim.keymap.set("i", "<C-x>", function() require('cmp').setup.buffer { enabled = true } end, {})
 
-vim.keymap.set("n", "<C-F1>", ":lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>")
-vim.keymap.set("i", "<C-F1>", "<ESC>:lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>a")
-vim.keymap.set("n", "<S-F1>", ":edit<CR>")
-vim.keymap.set("i", "<S-F1>", "<ESC>:edit<CR>a")
+local function turn_lsp_off()
+    vim.lsp.stop_client(vim.lsp.get_active_clients())
+    vim.print("LSP off")
+end
+
+vim.keymap.set({"n", "i"}, "<C-F1>", turn_lsp_off, { desc = "Turn LSP Off For Current Buffer" })
+vim.keymap.set("n", "<S-F1>", ":edit<CR>", { desc = "Reread and Turn LSP On" })
+vim.keymap.set("i", "<S-F1>", "<ESC>:edit<CR>a", { desc = "Reread and Turn LSP On" })
 
 cmp_mappings['<Tab>'] = nil
 cmp_mappings['<S-Tab>'] = nil
