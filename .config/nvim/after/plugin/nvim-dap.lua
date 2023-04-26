@@ -23,6 +23,7 @@ end
 
 -- DAP UI ---------------------------------------------------------------------
 local dapui = require("dapui")
+
 dapui.setup(
   {
     controls = {
@@ -55,35 +56,35 @@ dapui.setup(
       expanded = ""
     },
     layouts = { {
-        elements = { {
-            id = "scopes",
-            size = 0.25
-          }, {
-            id = "breakpoints",
-            size = 0.25
-          }, {
-            id = "stacks",
-            size = 0.25
-          }, {
-            id = "watches",
-            size = 0.25
-          } },
-        position = "left",
-        size = 40
-      }, {
-        elements = {
-          {
-            id = "repl",
-            size = 1.0
-          },
+      elements = { {
+          id = "scopes",
+          size = 0.25
+        }, {
+          id = "breakpoints",
+          size = 0.25
+        }, {
+          id = "stacks",
+          size = 0.25
+        }, {
+          id = "watches",
+          size = 0.25
+        } },
+      position = "left",
+      size = 80
+    }, {
+      elements = {
+        {
+          id = "repl",
+          size = 1.0
         },
-        position = "bottom",
-        size = 10
-      } },
+      },
+      position = "bottom",
+      size = 10
+    } },
     mappings = {
       edit = "e",
       expand = { "<CR>", "<2-LeftMouse>" },
-      open = "o",
+      open = "<Space>",
       remove = "d",
       repl = "r",
       toggle = "t"
@@ -95,11 +96,29 @@ dapui.setup(
   }
 )
 
-vim.keymap.set("n", "<C-F12>", dapui.toggle, { desc = "Toggle DAP UI"  })
+local opts = { reset = true }
 
-dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
-dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
-dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
+vim.keymap.set("n", "<C-F12>", function() dapui.toggle(opts) end, { desc = "Toggle DAP UI"  })
+vim.keymap.set("n", "<C-S-F12>", function() dapui.toggle(opts) dapui.toggle(opts) end, { desc = "Toggle DAP UI"  })
+
+dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open(opts) end
+dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close(opts) end
+dap.listeners.before.event_exited["dapui_config"] = function() dapui.close(opts) end
+
+-- jump to element ------------------------------------------------------------
+local function jump_to_element(element)
+  local visible_wins = vim.api.nvim_tabpage_list_wins(0)
+
+  for _, win in ipairs(visible_wins) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.bo[buf].filetype == element then
+      vim.api.nvim_set_current_win(win)
+      return
+    end
+  end
+
+  vim.notify(("element '%s' not found"):format(element), vim.log.levels.WARN)
+end
 
 -- prepare icons --------------------------------------------------------------
 vim.api.nvim_set_hl(0, 'DapBreakpoint', { ctermbg = 0, fg = '#993939', bg = '#31353f' })
@@ -114,7 +133,6 @@ vim.fn.sign_define('DapStopped', { text='', texthl='DapStopped', linehl='DapS
 
 -- key bindings ---------------------------------------------------------------
 vim.keymap.set("n", "<C-S-Esc>", function() close_all_dap_widgets() end, { desc = "Close All DAP Widgets" })
-vim.keymap.set("n", "<C-S-F1>", "80<C-w>|", { desc = "Set Vertical to 80" })
 vim.keymap.set("n", "<C-S-F4>", dapui.eval, { desc = "Evaluate Expression Under Cursor" })
 
 vim.keymap.set("n", "<C-F5>", dap.continue, { desc = "Start, Continue, Restart Session" })
@@ -125,6 +143,12 @@ vim.keymap.set("n", "<C-S-F9>", dap.clear_breakpoints, { desc = "Delete All Brea
 vim.keymap.set("n", "<C-F11>", dap.step_into, { desc = "Step Into" })
 vim.keymap.set("n", "<C-S-F11>", dap.step_out, { desc = "Step Out" })
 vim.keymap.set("n", "<C-F10>", dap.step_over, { desc = "Step Over" })
+
+vim.keymap.set("n", "g1", function() jump_to_element("dapui_watches") end, { desc = "Debug: Jump To Watches" })
+vim.keymap.set("n", "g2", function() jump_to_element("dapui_stacks") end, { desc = "Debug: Jump To Stacks" })
+vim.keymap.set("n", "g3", function() jump_to_element("dapui_breakpoints") end, { desc = "Debug: Jump To Breakpoints" })
+vim.keymap.set("n", "g4", function() jump_to_element("dapui_scopes") end, { desc = "Debug: Jump To Scopes" })
+vim.keymap.set("n", "g5", function() jump_to_element("dap-repl") end, { desc = "Debug: Jump To REPL" })
 
 -- WHICH KEY ------------------------------------------------------------------
 local wk = require("which-key")
@@ -148,6 +172,11 @@ wk.register({
             e = { expression.toggle, "Expression" },
             t = { threads.toggle, "Threads" },
             i = { sessions.toggle, "Sessions" },
+        },
+        x = {
+            name = "Examine/Jump Call Stack",
+            u = { dap.up, "Jump Up" },
+            d = { dap.down, "Jump Down" },
         },
     },
 }, { prefix = "<leader>"})
@@ -179,7 +208,10 @@ dap.configurations.cpp = {
         return vim.fn.getcwd() .. "/" .. filename
       end,
       cwd = "${workspaceFolder}",
-      stopOnEntry = false,
+      stopOnEntry = function()
+        BSFuncs.read_config()
+        return Config.stop_on_entry
+      end,
       args = function()
         BSFuncs.read_config()
         return Config.args

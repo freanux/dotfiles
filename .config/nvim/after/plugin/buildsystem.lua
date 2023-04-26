@@ -10,6 +10,7 @@ local popup = require("plenary.popup")
 local Defaults = {
     executable = "",
     args = {},
+    stop_on_entry = false,
     GNU = {
         prepare = "autoreconf -i",
         configure_help = "./configure --help",
@@ -226,6 +227,23 @@ local function bear()
     save_config(Config)
 end
 
+local function stop_on_entry()
+    get_config()
+    local qst = "Stop On Entry [" .. (Config.stop_on_entry and "Y/n" or "y/N") .. "]: "
+    local ans = string.upper(vim.fn.input(qst, Config.stop_on_entry and "y" or "n"))
+    if ans == "Y" then
+        Config.stop_on_entry = true
+        save_config(Config)
+        print("Set To Yes")
+    elseif ans == "N" then
+        Config.stop_on_entry = false
+        save_config(Config)
+        print("Set To No")
+    else
+        abort()
+    end
+end
+
 local function create_build_conf()
     local ok = pcall(save_config, Config)
     print("Configuration " .. (not ok and "not saved!!!" or "saved"))
@@ -242,6 +260,7 @@ wk.register({
         d = { configure_debug, "./configure [DEBUG]" },
         r = { configure_release, "./configure [RELEASE]" },
         b = { make, "make" },
+        p = { stop_on_entry, "stop on entry" },
         s = { strip, "strip" },
         t = { bear, "setup bear" },
         l = { get_config, "relog config" },
