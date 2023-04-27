@@ -129,24 +129,16 @@ end
 local function configure_debug()
     get_config()
     local params = vim.fn.input("Configure Params: ", Config.GNU.configure_params)
-    if not is_empty(params) then
-        Config.GNU.configure_params = params
-        exec(Config.GNU.configure_debug .. " " .. Config.GNU.configure_params)
-    else
-        print("abort...")
-    end
+    Config.GNU.configure_params = params
+    exec(Config.GNU.configure_debug .. " " .. Config.GNU.configure_params)
     save_config(Config)
 end
 
 local function configure_release()
     get_config()
     local params = vim.fn.input("Configure Params: ", Config.GNU.configure_params)
-    if not is_empty(params) then
-        Config.GNU.configure_params = params
-        exec(Config.GNU.configure_release .. " " .. Config.GNU.configure_params)
-    else
-        abort()
-    end
+    Config.GNU.configure_params = params
+    exec(Config.GNU.configure_release .. " " .. Config.GNU.configure_params)
     save_config(Config)
 end
 
@@ -176,7 +168,7 @@ local function declare_executable()
     get_config()
     local executable = vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/" .. Config.executable, "file")
     if not is_empty(executable) then
-        Config.executable = vim.fn.fnamemodify(executable, ":t")
+        Config.executable = vim.fn.fnamemodify(executable, ":.")
     else
         abort()
     end
@@ -266,7 +258,7 @@ wk.register({
         l = { get_config, "relog config" },
         u = { declare_executable, "declare executable" },
         v = { toggle_set_args, "set arguments" },
-        x = { create_build_conf, "create .build.conf" },
+        x = { create_build_conf, "save .build.conf" },
     },
     --c = {
     --    name = "CMake And Other Buildsystems",

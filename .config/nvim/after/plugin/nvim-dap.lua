@@ -204,8 +204,8 @@ dap.configurations.cpp = {
       request = "launch",
       program = function()
         BSFuncs.read_config()
-        local filename = is_empty(Config.executable) and vim.fn.fnamemodify(vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file"), ":t") or Config.executable
-        return vim.fn.getcwd() .. "/" .. filename
+        local filename = is_empty(Config.executable) and vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file") or vim.fn.getcwd() .. "/" .. Config.executable
+        return filename
       end,
       cwd = "${workspaceFolder}",
       stopOnEntry = function()
