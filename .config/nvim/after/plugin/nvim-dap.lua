@@ -101,7 +101,12 @@ local opts = { reset = true }
 vim.keymap.set("n", "<C-F12>", function() dapui.toggle(opts) end, { desc = "Toggle DAP UI"  })
 vim.keymap.set("n", "<C-S-F12>", function() dapui.toggle(opts) dapui.toggle(opts) end, { desc = "Toggle DAP UI"  })
 
-dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open(opts) end
+local function open_dap_ui()
+    vim.cmd.NvimTreeClose()
+    dapui.open(opts)
+end
+
+dap.listeners.after.event_initialized["dapui_config"] = function() open_dap_ui() end
 dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close(opts) end
 dap.listeners.before.event_exited["dapui_config"] = function() dapui.close(opts) end
 
