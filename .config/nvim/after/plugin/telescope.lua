@@ -57,6 +57,12 @@ require("telescope").setup({
         mappings = {
             i = {
                 ["<esc>"] = actions.close,
+                ["<C-PageUp>"] = actions.preview_scrolling_up,
+                ["<C-PageDown>"] = actions.preview_scrolling_down,
+            },
+            n = {
+                ["<C-PageUp>"] = actions.preview_scrolling_up,
+                ["<C-PageDown>"] = actions.preview_scrolling_down,
             },
         },
     },

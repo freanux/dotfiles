@@ -6,6 +6,7 @@
 
 local Path = require("plenary.path")
 local popup = require("plenary.popup")
+local wk = require("which-key")
 
 local Defaults = {
     executable = "",
@@ -70,7 +71,7 @@ local function print(text)
 end
 
 local function abort()
-    print("abort")
+    print("abort...")
 end
 
 local function get_conf_fn()
@@ -206,7 +207,7 @@ end
 
 BSFuncs = {}
 BSFuncs.toggle_set_args = toggle_set_args
-BSFuncs.read_config = get_config 
+BSFuncs.read_config = get_config
 
 local function bear()
     get_config()
@@ -242,7 +243,7 @@ local function create_build_conf()
 end
 
 -- ----------------------------------------------------------------------------
-local wk = require("which-key")
+vim.keymap.set("n", "<leader>r", ":!", { desc = "Run Shell Command" })
 wk.register({
     b = {
         name = "Project And Buildsystem",
@@ -260,8 +261,5 @@ wk.register({
         v = { toggle_set_args, "set arguments" },
         x = { create_build_conf, "save .build.conf" },
     },
-    --c = {
-    --    name = "CMake And Other Buildsystems",
-    --},
 }, { prefix = "<leader>"})
 

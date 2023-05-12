@@ -13,6 +13,7 @@ call plug#begin()
     Plug 'folke/which-key.nvim'
     Plug 's1n7ax/nvim-window-picker'
     Plug 'sudormrfbin/cheatsheet.nvim'
+    Plug '/home/flynn/Programming/procurator.nvim'
 
     " LSP support
     Plug 'williamboman/mason.nvim'
