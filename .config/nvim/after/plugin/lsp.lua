@@ -3,8 +3,6 @@ local lsp = require("lsp-zero")
 lsp.preset("recommended")
 
 require('mason').setup({})
-
--- lsp.ensure_installed({
 require('mason-lspconfig').setup({
     ensure_installed = {'clangd', 'lua_ls'},
     handlers = {
@@ -32,16 +30,6 @@ lsp.configure("lua_ls", {
 
 local cmp = require('cmp')
 local cmp_select = {behavior = cmp.SelectBehavior.Select}
---[[
-local cmp_mappings = lsp.defaults.cmp_mappings({
-  ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-  ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-  ['<PageUp>'] = cmp.mapping.scroll_docs(-15),
-  ['<PageDown>'] = cmp.mapping.scroll_docs(15),
-  ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-  ['<C-Space>'] = cmp.mapping.complete(),
-})
---]]
 
 cmp.setup.buffer { enabled = false }
 
@@ -57,12 +45,6 @@ vim.keymap.set({"n", "i"}, "<C-F1>", turn_lsp_off, { desc = "Turn LSP Off For Cu
 vim.keymap.set("n", "<S-F1>", ":edit<CR>", { desc = "Reread and Turn LSP On" })
 vim.keymap.set("i", "<S-F1>", "<ESC>:edit<CR>a", { desc = "Reread and Turn LSP On" })
 
--- cmp_mappings['<Tab>'] = nil
--- cmp_mappings['<S-Tab>'] = nil
-
--- lsp.setup_nvim_cmp({
---  mapping = cmp_mappings
---})
 cmp.setup({
     sources = {
         {name = 'path'},
@@ -81,17 +63,6 @@ cmp.setup({
     }),
 })
 
---[[
-lsp.set_preferences({
-    suggest_lsp_servers = false,
-    sign_icons = {
-        error = " ",
-        warn = " ",
-        hint = " ",
-        info = " "
-    }
-})
---]]
 lsp.set_sign_icons({
     error = " ",
     warn = " ",
