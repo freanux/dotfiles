@@ -34,10 +34,13 @@ vim.opt.undofile = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-vim.opt.listchars= "eol:↵,trail:~,tab:>-,nbsp:␣"
-
--- vim.g.netrw_bufsettings = "noma nomod nu nobl nowrap ro"
--- vim.g.netrw_preview = true
+vim.opt.listchars = {
+    eol = "↵",
+    trail = "~",
+    tab = ">-",
+    nbsp = "␣",
+    space = "·"
+}
 
 vim.cmd.filetype("plugin indent on")
 vim.cmd.syntax("on")

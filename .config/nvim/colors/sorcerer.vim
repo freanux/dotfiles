@@ -220,3 +220,4 @@ hi TabLine                gui=NONE             guifg=#ebdbb2   guibg=#3c3836
 hi TabLineFill            gui=NONE             guifg=#ebdbb2   guibg=#3c3836
 hi TabLineSel             gui=NONE             guifg=#3c3836   guibg=#ebdbb2
 
+hi EndOfBuffer guifg=#272727 guibg=#1a1a1a
