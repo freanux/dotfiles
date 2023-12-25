@@ -64,10 +64,10 @@ cmp.setup({
 })
 
 lsp.set_sign_icons({
-    error = " ",
-    warn = " ",
+    error = " ",
+    warn = " ",
     hint = " ",
-    info = " "
+    info = " "
 })
 
 lsp.on_attach(function(_, bufnr)
