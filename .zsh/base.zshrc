@@ -10,8 +10,10 @@ compinit
 zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion::complete:*' cache-path $ZSH_CACHE
 
-# Enable approximate completions
-zstyle ':completion:*' completer _complete _ignored _approximate
+# Enable approximate completions (w/o correction)
+#zstyle ':completion:*' completer _complete _ignored _approximate
+zstyle ':completion:*' completer _complete _ignored
+
 zstyle -e ':completion:*:approximate:*' max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3)) numeric)'
 
 # Automatically update PATH entries
