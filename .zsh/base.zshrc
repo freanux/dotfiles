@@ -191,8 +191,14 @@ export LESS_TERMCAP_so=$'\E[1;37;44m'   # begin standout-mode - info box
 export LESS_TERMCAP_se=$'\E[0m'         # end standout-mode
 export LESS_TERMCAP_us=$'\E[1;33m'      # begin underline
 export LESS_TERMCAP_ue=$'\E[0m'         # end underline
+export GROFF_NO_SGR=1
 
 ################################################################################################
 # fzf SETTINGS (COLOR SCHEME aliases)
 ################################################################################################
 export FZF_DEFAULT_OPTS='--color=bg+:#3c3836,bg:#32302f,spinner:#fb4934,hl:#928374,fg:#ebdbb2,header:#928374,info:#8ec07c,pointer:#fb4934,marker:#fb4934,fg+:#ebdbb2,prompt:#fb4934,hl+:#fb4934'
+
+################################################################################################
+# zoxide init
+################################################################################################
+eval "$(zoxide init --cmd cd zsh)"

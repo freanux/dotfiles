@@ -6,7 +6,7 @@ call plug#begin()
     Plug 'feline-nvim/feline.nvim', { 'branch': '0.5-compat' }
     Plug 'nvim-lua/popup.nvim'
     Plug 'nvim-lua/plenary.nvim'
-    Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
+    Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.4' }
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'mbbill/undotree'
     Plug 'theprimeagen/harpoon'
@@ -39,6 +39,7 @@ call plug#begin()
     Plug 'mfussenegger/nvim-dap'
     Plug 'rcarriga/nvim-dap-ui'
     Plug 'ldelossa/nvim-dap-projects'
+    Plug 'nvim-neotest/nvim-nio'
 call plug#end()
 
 " ***********************************************
