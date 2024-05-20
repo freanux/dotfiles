@@ -1,5 +1,4 @@
 vim.g.mapleader = " "
-vim.opt.pastetoggle = "<F10>"
 vim.keymap.set("n", "q", "<Nop>")    -- turn off recording
 
 -- ***********************************************
