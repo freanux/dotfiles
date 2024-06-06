@@ -72,7 +72,10 @@ tc.setup(
 wk.register({
     e = {
         name = "Jump Comments/Todos/Fixes/Notes/...",
-        e = { function() tc.jump_next() end, "TODO: Jump To Next" },
-        w = { function() tc.jump_prev() end, "TODO: Jump To Prev" },
+        e = { function() tc.jump_next() end, "Jump To Next" },
+        w = { function() tc.jump_prev() end, "Jump To Prev" },
     }
 }, { prefix = "<leader>"})
+
+vim.keymap.set("n", "<leader>el", ":TodoLocList<CR>", { desc = "Open Location List" });
+vim.keymap.set("n", "<leader>et", ":TodoTelescope<CR>", { desc = "Open Telescope" });
