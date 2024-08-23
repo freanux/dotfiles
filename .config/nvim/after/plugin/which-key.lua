@@ -1,6 +1,10 @@
 local wk = require("which-key")
 
-wk.setup()
+wk.setup({
+    icons = {
+        mappings = false,
+    },
+})
 
 local function toggle_characters()
     vim.opt.list = not (vim.opt.list:get())
@@ -12,12 +16,10 @@ local function remove_trailing_characters()
     vim.fn.setpos(".", save_cursor)
 end
 
-wk.register({
-t = {
-    name = "Trailing Characters",
-        t = { function() toggle_characters() end, "Toggle Characters" },
-        r = { function() remove_trailing_characters() end, "Remove Trailing Characters" },
-    },
-}, { prefix = "<leader>"})
+wk.add({
+    { "<leader>t", group = "Trailing Characters" },
+    { "<leader>tr", function() remove_trailing_characters() end, desc = "Remove Trailing Characters" },
+    { "<leader>tt", function() toggle_characters() end, desc = "Toggle Characters" },
+})
 
 vim.o.timeoutlen = 0

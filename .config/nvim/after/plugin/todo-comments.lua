@@ -69,13 +69,11 @@ tc.setup(
 }
 )
 
-wk.register({
-    e = {
-        name = "Jump Comments/Todos/Fixes/Notes/...",
-        e = { function() tc.jump_next() end, "Jump To Next" },
-        w = { function() tc.jump_prev() end, "Jump To Prev" },
-    }
-}, { prefix = "<leader>"})
+wk.add({
+    { "<leader>e", group = "Jump Comments/Todos/Fixes/Notes/..." },
+    { "<leader>ee", function() tc.jump_next() end, desc = "Jump To Next" },
+    { "<leader>ew", function() tc.jump_prev() end, desc = "Jump To Prev" },
+})
 
 vim.keymap.set("n", "<leader>el", ":TodoLocList<CR>", { desc = "Open Location List" });
 vim.keymap.set("n", "<leader>et", ":TodoTelescope<CR>", { desc = "Open Telescope" });

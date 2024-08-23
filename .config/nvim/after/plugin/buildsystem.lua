@@ -244,22 +244,19 @@ end
 
 -- ----------------------------------------------------------------------------
 vim.keymap.set("n", "<leader>r", ":!", { desc = "Run Shell Command" })
-wk.register({
-    b = {
-        name = "Project And Buildsystem",
-        a = { autoreconf, "autoreconf -i" },
-        c = { make_clean, "make clean" },
-        h = { configure_help, "./configure --help" },
-        d = { configure_debug, "./configure [DEBUG]" },
-        r = { configure_release, "./configure [RELEASE]" },
-        b = { make, "make" },
-        p = { stop_on_entry, "stop on entry" },
-        s = { strip, "strip" },
-        t = { bear, "setup bear" },
-        l = { get_config, "relog config" },
-        u = { declare_executable, "declare executable" },
-        v = { toggle_set_args, "set arguments" },
-        x = { create_build_conf, "save .build.conf" },
-    },
-}, { prefix = "<leader>"})
-
+wk.add({
+    { "<leader>b", group = "Project And Buildsystem" },
+    { "<leader>ba", autoreconf, desc = "autoreconf -i" },
+    { "<leader>bc", make_clean, desc = "make clean" },
+    { "<leader>bh", configure_help, desc = "./configure --help" },
+    { "<leader>bd", configure_debug, desc = "./configure [DEBUG]" },
+    { "<leader>br", configure_release, desc = "./configure [RELEASE]" },
+    { "<leader>bb", make, desc = "make" },
+    { "<leader>bp", stop_on_entry, desc = "stop on entry" },
+    { "<leader>bs", strip, desc = "strip" },
+    { "<leader>bt", bear, desc = "setup bear" },
+    { "<leader>bl", get_config, desc = "relog config" },
+    { "<leader>bu", declare_executable, desc = "declare executable" },
+    { "<leader>bv", toggle_set_args, desc = "set arguments" },
+    { "<leader>bx", create_build_conf, desc = "save .build.conf" },
+})

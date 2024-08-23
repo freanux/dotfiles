@@ -157,40 +157,34 @@ vim.keymap.set("n", "g5", function() jump_to_element("dap-repl") end, { desc = "
 
 -- WHICH KEY ------------------------------------------------------------------
 local wk = require("which-key")
-wk.register({
-    d = {
-        name = "Debugging",
-        c = { dap.continue, "Start, Continue, Restart Session <CTRL-F5>" },
-        t = { dap.terminate, "Terminate Session <CTRL-SHIFT-F5>" },
-        o = { dap.repl.toggle, "REPL Toggle <CTRL-F8>" },
-        b = { dap.toggle_breakpoint, "Toggle Breakpoint <CTRL-F9>" },
-        d = { dap.clear_breakpoints, "Delete All Breakpoints <CTRL-SHIFT-F9>" },
-        s = { dap.step_over, "Step Over <CTRL-F10>" },
-        p = { dap.step_out, "Step Out <CTRL-SHIFT-F11>" },
-        i = { dap.step_into, "Step Into <CTRL-F11>" },
-        u = { dapui.toggle, "Toggle DAP UI <CTRL-F12>" },
-        w = {
-            name = "Toggle Widgets",
-            c = { function() close_all_dap_widgets() end, "Close All Floats" },
-            f = { frames.toggle, "Frames" },
-            s = { scopes.toggle, "Scopes" },
-            e = { expression.toggle, "Expression" },
-            t = { threads.toggle, "Threads" },
-            i = { sessions.toggle, "Sessions" },
-        },
-        x = {
-            name = "Examine/Jump Call Stack",
-            u = { dap.up, "Jump Up" },
-            d = { dap.down, "Jump Down" },
-        },
-    },
-}, { prefix = "<leader>"})
+wk.add({
+    { "<leader>d", group = "Debugging" },
+    { "<leader>db", dap.toggle_breakpoint, desc = "Toggle Breakpoint <CTRL-F9>" },
+    { "<leader>dc", dap.continue, desc = "Start, Continue, Restart Session <CTRL-F5>" },
+    { "<leader>dd", dap.clear_breakpoints, desc = "Delete All Breakpoints <CTRL-SHIFT-F9>" },
+    { "<leader>di", dap.step_into, desc = "Step Into <CTRL-F11>" },
+    { "<leader>do", dap.repl.toggle, desc = "REPL Toggle <CTRL-F8>" },
+    { "<leader>dp", dap.step_out, desc = "Step Out <CTRL-SHIFT-F11>" },
+    { "<leader>ds", dap.step_over, desc = "Step Over <CTRL-F10>" },
+    { "<leader>dt", dap.terminate, desc = "Terminate Session <CTRL-SHIFT-F5>" },
+    { "<leader>du", dapui.toggle, desc = "Toggle DAP UI <CTRL-F12>" },
+    { "<leader>dw", group = "Toggle Widgets" },
+    { "<leader>dwc", function() close_all_dap_widgets() end, desc = "Close All Floats" },
+    { "<leader>dwe", expression.toggle, desc = "Expression" },
+    { "<leader>dwf", frames.toggle, desc = "Frames" },
+    { "<leader>dwi", sessions.toggle, desc = "Sessions" },
+    { "<leader>dws", scopes.toggle, desc = "Scopes" },
+    { "<leader>dwt", threads.toggle, desc = "Threads" },
+    { "<leader>dx", group = "Examine/Jump Call Stack" },
+    { "<leader>dxd", dap.down, desc = "Jump Down" },
+    { "<leader>dxu", dap.up, desc = "Jump Up" },
+})
 
 -- C++  -----------------------------------------------------------------------
 dap.adapters.lldb = {
     type = 'executable',
     -- absolute path is important here, otherwise the argument in the `runInTerminal` request will default to $CWD/lldb-vscode
-    command = '/usr/bin/lldb-vscode-10',
+    command = '/usr/bin/lldb',
     name = "lldb",
 }
 
