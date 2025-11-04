@@ -14,7 +14,9 @@ call plug#begin()
     Plug 's1n7ax/nvim-window-picker'
     Plug 'sudormrfbin/cheatsheet.nvim'
     Plug 'folke/todo-comments.nvim'
+    Plug 'tomasky/bookmarks.nvim'
     Plug '/home/flynn/Programming/procurator.nvim'
+    Plug 'xiyaowong/transparent.nvim'
 
     " LSP support
     Plug 'williamboman/mason.nvim'

@@ -20,6 +20,7 @@ wk.add({
     { "<leader>t", group = "Trailing Characters" },
     { "<leader>tr", function() remove_trailing_characters() end, desc = "Remove Trailing Characters" },
     { "<leader>tt", function() toggle_characters() end, desc = "Toggle Characters" },
+    { "<leader>h", vim.cmd.nohlsearch, desc = "Hide Search Highlights" },
 })
 
 vim.o.timeoutlen = 0

@@ -153,6 +153,8 @@ alias c...='cd ../../..'
 alias c....='cd ../../../..'
 alias c.....='cd ../../../../..'
 alias lg='lazygit'
+alias hx='helix'
+alias jless='jless --line-numbers --relative-line-numbers'
 
 ################################################################################################
 # BINDS
